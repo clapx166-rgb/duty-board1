@@ -1,0 +1,2347 @@
+<title>Front Desk Duty Board</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@400;600&display=swap">
+
+<style>
+:root{
+  --paper:#eef2f3; --surface:#ffffff; --surface-2:#e5eaec; --sunken:#dde4e6;
+  --line:#d2dadd; --line-strong:#9aa9ad; --rule:#0f1a1d;
+  --ink:#0f1a1d; --ink-2:#3d4e53; --ink-3:#6f8085;
+  --accent:#0d5a63; --accent-2:#0a464d; --accent-soft:#cfe4e5; --on-accent:#ffffff;
+  --ok:#2c7a58; --warn:#a86a12; --crit:#a83a2f;
+  --ok-bg:#dceee4; --warn-bg:#f8eacd; --crit-bg:#f7dcd8;
+  --am-bg:#d8ecdd; --am-fg:#1d5936; --am-edge:#a9d3b6;
+  --pm-bg:#d6e5f4; --pm-fg:#1b4d7a; --pm-edge:#a7c6e4;
+  --noc-bg:#f5dfce; --noc-fg:#864c1c; --noc-edge:#e0bd9c;
+  --k-bg:#e0e4e7;  --k-fg:#465057;  --k-edge:#c2cbd0;
+  --m-bg:#f6e8c2;  --m-fg:#755710;  --m-edge:#e0cd94;
+  --to-bg:#ece5f3;  --to-fg:#5b4a7c; --to-edge:#d2c6e3;
+  --shadow:0 1px 2px rgba(15,26,29,.06), 0 6px 20px -12px rgba(15,26,29,.28);
+  --radius:6px;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0d1315; --surface:#151d20; --surface-2:#1d272a; --sunken:#111a1c;
+    --line:#293539; --line-strong:#4b5c61; --rule:#7c8f94;
+    --ink:#e7eeef; --ink-2:#adbbbf; --ink-3:#7d8d92;
+    --accent:#4fb2b9; --accent-2:#7fcbd0; --accent-soft:#123c40; --on-accent:#06181a;
+    --ok:#5cba8c; --warn:#dda94f; --crit:#ee8375;
+    --ok-bg:#16332a; --warn-bg:#3a2f13; --crit-bg:#3c211d;
+    --am-bg:#193a28; --am-fg:#8ad4a5; --am-edge:#28563a;
+    --pm-bg:#15324b; --pm-fg:#8fc2ec; --pm-edge:#234a68;
+    --noc-bg:#442a15; --noc-fg:#e2a973; --noc-edge:#5e3d21;
+    --k-bg:#242c30;  --k-fg:#a9b6bb;  --k-edge:#36434a;
+    --m-bg:#3b3312;  --m-fg:#dec37a;  --m-edge:#52481d;
+    --to-bg:#2b2340;  --to-fg:#bda9e0; --to-edge:#3f3459;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -14px rgba(0,0,0,.7);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0d1315; --surface:#151d20; --surface-2:#1d272a; --sunken:#111a1c;
+  --line:#293539; --line-strong:#4b5c61; --rule:#7c8f94;
+  --ink:#e7eeef; --ink-2:#adbbbf; --ink-3:#7d8d92;
+  --accent:#4fb2b9; --accent-2:#7fcbd0; --accent-soft:#123c40; --on-accent:#06181a;
+  --ok:#5cba8c; --warn:#dda94f; --crit:#ee8375;
+  --ok-bg:#16332a; --warn-bg:#3a2f13; --crit-bg:#3c211d;
+  --am-bg:#193a28; --am-fg:#8ad4a5; --am-edge:#28563a;
+  --pm-bg:#15324b; --pm-fg:#8fc2ec; --pm-edge:#234a68;
+  --noc-bg:#442a15; --noc-fg:#e2a973; --noc-edge:#5e3d21;
+  --k-bg:#242c30;  --k-fg:#a9b6bb;  --k-edge:#36434a;
+  --m-bg:#3b3312;  --m-fg:#dec37a;  --m-edge:#52481d;
+  --to-bg:#2b2340;  --to-fg:#bda9e0; --to-edge:#3f3459;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -14px rgba(0,0,0,.7);
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:"Source Sans 3", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size:15px; line-height:1.45; -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1360px; margin:0 auto; padding-inline:18px; padding-block:22px 60px}
+h1,h2,h3,.disp{font-family:"Archivo", ui-sans-serif, system-ui, sans-serif; font-weight:700; letter-spacing:-.01em; margin:0; text-wrap:balance}
+.mono{font-family:"IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace; font-variant-numeric:tabular-nums}
+.eyebrow{font-family:"Archivo",sans-serif; font-weight:600; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3)}
+button{font:inherit; color:inherit; cursor:pointer}
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:3px}
+
+/* ---------- masthead ---------- */
+.masthead{display:flex; flex-wrap:wrap; align-items:flex-end; gap:14px 20px; padding-bottom:14px; border-bottom:2px solid var(--rule)}
+.masthead h1{font-size:clamp(22px,3.2vw,30px); line-height:1.05}
+.prop{display:flex; flex-direction:column; gap:3px; margin-right:auto}
+.prop .eyebrow{color:var(--accent)}
+.wknav{display:flex; align-items:center; gap:8px}
+.wknav .range{font-family:"Archivo",sans-serif; font-weight:600; font-size:14px; min-width:168px; text-align:center; letter-spacing:-.005em}
+.iconbtn{width:32px; height:32px; display:grid; place-items:center; border:1px solid var(--line); background:var(--surface); border-radius:var(--radius); font-size:15px; line-height:1}
+.iconbtn:hover{border-color:var(--line-strong)}
+
+/* ---------- toolbar ---------- */
+.toolbar{display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-top:14px}
+.btn{display:inline-flex; align-items:center; gap:7px; padding:7px 13px; border:1px solid var(--line); background:var(--surface); border-radius:var(--radius); font-family:"Archivo",sans-serif; font-weight:600; font-size:13px; white-space:nowrap}
+.btn:hover{border-color:var(--line-strong)}
+.btn.primary{background:var(--accent); border-color:var(--accent); color:var(--on-accent)}
+.btn.primary:hover{background:var(--accent-2); border-color:var(--accent-2)}
+.btn[disabled]{opacity:.45; cursor:not-allowed}
+.btn .k{font-family:"IBM Plex Mono",monospace; font-weight:400; font-size:11px; color:var(--ink-3)}
+.spacer{flex:1 1 20px}
+.menu-wrap{position:relative}
+.menu{position:absolute; z-index:40; top:calc(100% + 6px); left:0; min-width:250px; background:var(--surface); border:1px solid var(--line); border-radius:8px; box-shadow:var(--shadow); padding:6px; display:none}
+.menu.open{display:block}
+.menu button{display:block; width:100%; text-align:left; background:none; border:0; padding:9px 10px; border-radius:5px}
+.menu button:hover{background:var(--surface-2)}
+.menu b{display:block; font-family:"Archivo",sans-serif; font-size:13px; font-weight:600}
+.menu span{display:block; font-size:12.5px; color:var(--ink-3); line-height:1.3}
+
+/* ---------- coverage strip ---------- */
+.strip{display:grid; grid-template-columns:repeat(7,1fr); gap:6px; margin-top:16px}
+.daychip{background:var(--surface); border:1px solid var(--line); border-top:3px solid var(--ok); border-radius:var(--radius); padding:7px 9px 8px; min-width:0}
+.daychip.warnState{border-top-color:var(--warn)}
+.daychip.critState{border-top-color:var(--crit)}
+.daychip .top{display:flex; align-items:baseline; gap:6px}
+.daychip .d{font-family:"Archivo",sans-serif; font-weight:700; font-size:13px}
+.daychip .dt{font-size:11.5px; color:var(--ink-3)}
+.daychip .st{display:block; margin-top:3px; font-size:11.5px; font-weight:600; color:var(--ok)}
+.daychip.warnState .st{color:var(--warn)}
+.daychip.critState .st{color:var(--crit)}
+
+/* ---------- board ---------- */
+.boardbox{margin-top:14px; background:var(--surface); border:1px solid var(--line); border-radius:8px; overflow-x:auto; box-shadow:var(--shadow)}
+table.board{border-collapse:collapse; width:100%; min-width:820px}
+.board th, .board td{border:1px solid var(--line); padding:0}
+.board thead th{background:var(--surface-2); position:sticky; top:0; z-index:8; padding:7px 6px; font-family:"Archivo",sans-serif; font-size:12px; font-weight:600}
+.board thead th .dd{display:block; font-size:15px; font-weight:700}
+.board thead th .dnum{display:block; font-family:"IBM Plex Mono",monospace; font-size:11px; font-weight:400; color:var(--ink-3)}
+.colName{width:180px; min-width:150px}
+.board .nameCell{background:var(--surface); position:sticky; left:0; z-index:6; padding:6px 10px; text-align:left; width:180px}
+.board thead .nameCell{z-index:9; background:var(--surface-2)}
+.board .nameCell .nm{font-family:"Archivo",sans-serif; font-weight:600; font-size:14px; display:flex; align-items:center; gap:6px}
+.board .nameCell .sub{font-size:11.5px; color:var(--ink-3)}
+.deptrow td{background:var(--sunken); padding:6px 10px; border-left:0; border-right:0}
+.deptrow .dl{display:flex; align-items:baseline; gap:10px}
+.deptrow .dl .eyebrow{color:var(--ink-2)}
+.deptrow .dl .need{font-size:11.5px; color:var(--ink-3)}
+.colTot{width:74px; min-width:66px}
+.totCell{text-align:center; padding:6px 4px; background:var(--surface)}
+.totCell .h{font-family:"IBM Plex Mono",monospace; font-size:14px; font-weight:500}
+.totCell .dz{font-size:11px; color:var(--ink-3)}
+.totCell.ot .h{color:var(--warn)}
+
+.cell{position:relative; width:100%; min-height:44px; border:0; background:transparent; padding:6px 4px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; font-family:"IBM Plex Mono",monospace; font-size:12.5px; font-weight:500}
+.cell .lbl{font-family:"Archivo",sans-serif; font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; opacity:.72}
+.cell.off{color:var(--ink-3); font-family:"Source Sans 3",sans-serif; font-size:13px; font-weight:400}
+/* A double: two shifts stacked in the one cell, each in its own colour. */
+.cell.dbl{background:transparent; box-shadow:none; padding:2px; gap:2px; justify-content:stretch}
+.cell.dbl .part{display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0;
+  width:100%; flex:1 1 0; min-height:19px; border-radius:3px; padding:2px 3px; font-size:11px}
+.cell.dbl .part .lbl{font-size:9px; opacity:.8}
+.cell.AM{background:var(--am-bg); color:var(--am-fg); box-shadow:inset 0 0 0 1px var(--am-edge)}
+.cell.PM{background:var(--pm-bg); color:var(--pm-fg); box-shadow:inset 0 0 0 1px var(--pm-edge)}
+.cell.NOC{background:var(--noc-bg); color:var(--noc-fg); box-shadow:inset 0 0 0 1px var(--noc-edge)}
+.cell.K{background:var(--k-bg); color:var(--k-fg); box-shadow:inset 0 0 0 1px var(--k-edge)}
+.cell.M{background:var(--m-bg); color:var(--m-fg); box-shadow:inset 0 0 0 1px var(--m-edge)}
+.cell:hover:not([disabled]){filter:brightness(.97)}
+:root[data-theme="dark"] .cell:hover:not([disabled]){filter:brightness(1.18)}
+.cell .flag{position:absolute; top:2px; left:3px; width:6px; height:6px; border-radius:50%}
+.cell .flag.warn{background:var(--warn)}
+.cell .flag.crit{background:var(--crit)}
+.cell{cursor:grab; touch-action:none; -webkit-user-select:none; user-select:none}
+.cell:active{cursor:grabbing}
+.cell.dragging{opacity:.3}
+.cell.timeoff{background:var(--to-bg); color:var(--to-fg); box-shadow:inset 0 0 0 1px var(--to-edge);
+  font-family:"Archivo",sans-serif; font-size:10px; font-weight:700; letter-spacing:.07em; text-transform:uppercase}
+.cell.timeoff.pend{background:transparent; box-shadow:inset 0 0 0 1px var(--to-edge); color:var(--ink-3)}
+
+/* ---------- time off ---------- */
+.badge{display:inline-grid; place-items:center; min-width:18px; height:18px; padding:0 5px; border-radius:9px;
+  background:var(--warn); color:#fff; font-family:"IBM Plex Mono",monospace; font-size:11px; font-weight:500}
+:root[data-theme="dark"] .badge{color:#1c1405}
+.badge:empty{display:none}
+.cal{display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:1px; background:var(--line); border:1px solid var(--line)}
+.cal .dh{background:var(--surface-2); padding:5px 4px; text-align:center; font-family:"Archivo",sans-serif;
+  font-size:10.5px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3)}
+.cal .day{background:var(--surface); min-height:74px; padding:4px 5px 5px; display:flex; flex-direction:column; gap:3px;
+  border:0; text-align:left; align-items:stretch; border-radius:0}
+.cal .day.out{background:var(--sunken); opacity:.55}
+.cal .day.today{box-shadow:inset 0 0 0 2px var(--accent)}
+.cal .day:hover{background:var(--surface-2)}
+.cal .day .n{font-family:"IBM Plex Mono",monospace; font-size:11.5px; color:var(--ink-3)}
+.cal .day.out .n{color:var(--ink-3)}
+.offchip{display:block; font-family:"Archivo",sans-serif; font-size:10.5px; font-weight:600; padding:2px 5px;
+  border-radius:3px; background:var(--to-bg); color:var(--to-fg); overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.offchip.pend{background:transparent; box-shadow:inset 0 0 0 1px var(--warn); color:var(--warn)}
+.calnav{display:flex; align-items:center; gap:8px; padding:9px 13px; border-bottom:1px solid var(--line); background:var(--surface-2)}
+.calnav .m{font-family:"Archivo",sans-serif; font-weight:700; font-size:14px; min-width:150px; text-align:center}
+.reqrow{display:flex; flex-wrap:wrap; align-items:center; gap:8px; padding:9px 13px; border-bottom:1px solid var(--line); font-size:13.5px}
+.reqrow:last-child{border-bottom:0}
+.reqrow .who{font-family:"Archivo",sans-serif; font-weight:600}
+.reqrow .dt{font-family:"IBM Plex Mono",monospace; font-size:12.5px; color:var(--ink-3)}
+.reqrow .note{color:var(--ink-3); font-size:12.5px; flex:1 1 100%}
+.reqrow .acts{margin-left:auto; display:flex; gap:6px}
+.pill{font-family:"Archivo",sans-serif; font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+  padding:2px 7px; border-radius:3px}
+.pill.approved{background:var(--to-bg); color:var(--to-fg)}
+.pill.pending{background:var(--warn-bg); color:var(--warn)}
+.pill.denied{background:var(--surface-2); color:var(--ink-3)}
+.mini{border:1px solid var(--line); background:var(--surface); border-radius:5px; padding:3px 9px;
+  font-family:"Archivo",sans-serif; font-size:11.5px; font-weight:600}
+.mini:hover{border-color:var(--line-strong)}
+.mini.go{background:var(--accent); border-color:var(--accent); color:var(--on-accent)}
+.addrow{display:flex; flex-wrap:wrap; gap:8px; align-items:center; padding:11px 13px}
+.addrow input[type=date]{font:inherit; font-size:13.5px; color:var(--ink); background:var(--surface);
+  border:1px solid var(--line); border-radius:5px; padding:5px 7px}
+.addrow .grow{flex:1 1 150px; min-width:120px}
+.cell:focus-visible{outline:2px solid var(--accent); outline-offset:-2px; border-radius:0}
+
+/* ---------- phone day view ---------- */
+.dayview{display:none; margin-top:14px; flex-direction:column; gap:10px}
+.daycard{background:var(--surface); border:1px solid var(--line); border-radius:8px; overflow:hidden; box-shadow:var(--shadow)}
+.daycard > header{display:flex; align-items:baseline; justify-content:space-between; gap:10px; padding:9px 12px; background:var(--surface-2); border-bottom:1px solid var(--line)}
+.daycard > header b{font-family:"Archivo",sans-serif; font-size:15px}
+.daycard > header .dt{font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--ink-3)}
+.slot{display:flex; align-items:center; gap:10px; padding:10px 12px; border-bottom:1px solid var(--line)}
+.slot:last-child{border-bottom:0}
+button.slot{width:100%; background:none; border:0; border-bottom:1px solid var(--line); text-align:left; font:inherit; color:inherit; border-radius:0}
+button.slot:last-child{border-bottom:0}
+button.slot:hover{background:var(--surface-2)}
+button.slot:active{background:var(--accent-soft)}
+.slot .tag{flex:0 0 auto; font-family:"Archivo",sans-serif; font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; padding:3px 7px; border-radius:4px}
+.slot .tag.AM{background:var(--am-bg); color:var(--am-fg)}
+.slot .tag.PM{background:var(--pm-bg); color:var(--pm-fg)}
+.slot .tag.NOC{background:var(--noc-bg); color:var(--noc-fg)}
+.slot .tag.K{background:var(--k-bg); color:var(--k-fg)}
+.slot .tag.M{background:var(--m-bg); color:var(--m-fg)}
+.slot .who{font-weight:600}
+.slot .who.gap{color:var(--crit); font-weight:600}
+.slot .tm{margin-left:auto; font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--ink-3)}
+
+/* ---------- issues ---------- */
+.issues{margin-top:16px; background:var(--surface); border:1px solid var(--line); border-radius:8px; box-shadow:var(--shadow)}
+.issues > header{display:flex; flex-wrap:wrap; align-items:center; gap:6px 10px; padding:10px 14px; border-bottom:1px solid var(--line)}
+.issues > header .count{font-family:"IBM Plex Mono",monospace; font-size:12px; padding:2px 8px; border-radius:999px; background:var(--surface-2)}
+.issues > header .count.has{background:var(--crit-bg); color:var(--crit)}
+.issues ul{list-style:none; margin:0; padding:4px 0}
+.issues li{display:flex; gap:10px; align-items:flex-start; padding:7px 14px; font-size:13.5px}
+.issues li + li{border-top:1px solid var(--line)}
+.issues li .sev{flex:0 0 auto; margin-top:2px; font-family:"Archivo",sans-serif; font-size:9.5px; font-weight:700; letter-spacing:.09em; text-transform:uppercase; padding:2px 6px; border-radius:3px}
+.sev.crit{background:var(--crit-bg); color:var(--crit)}
+.sev.warn{background:var(--warn-bg); color:var(--warn)}
+.issues .clean{margin:0; padding:12px 14px; color:var(--ink-3); font-size:13.5px}
+.issues li .when{color:var(--ink-3)}
+
+/* ---------- popover ---------- */
+.pop{position:absolute; z-index:60; background:var(--surface); border:1px solid var(--line-strong); border-radius:8px; box-shadow:var(--shadow); padding:8px; min-width:186px; display:none}
+.pop.open{display:block}
+.pop .ph{font-size:12px; color:var(--ink-3); padding:2px 4px 7px; border-bottom:1px solid var(--line); margin-bottom:6px}
+.pop .ph b{display:block; font-family:"Archivo",sans-serif; font-size:13.5px; color:var(--ink); font-weight:600}
+.opt{display:flex; align-items:center; gap:9px; width:100%; text-align:left; background:none; border:0; padding:7px 8px; border-radius:5px; font-size:13.5px}
+.opt:hover{background:var(--surface-2)}
+.opt .sw{width:11px; height:11px; border-radius:3px; flex:0 0 auto}
+.opt .tm{margin-left:auto; font-family:"IBM Plex Mono",monospace; font-size:11.5px; color:var(--ink-3)}
+.opt.sel{background:var(--accent-soft)}
+.opt.na{opacity:.42}
+.pop .phs{font-size:10.5px; font-family:"Archivo",sans-serif; font-weight:600; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--ink-3); padding:9px 4px 5px; margin-top:4px; border-top:1px solid var(--line)}
+
+/* ---------- drawer ---------- */
+.scrim{position:fixed; inset:0; background:rgba(8,16,18,.5); z-index:70; display:none}
+.scrim.open{display:block}
+.drawer{position:fixed; top:0; right:0; bottom:0; width:min(680px,100%); background:var(--paper); z-index:71; display:none; flex-direction:column; box-shadow:-14px 0 40px -20px rgba(0,0,0,.5)}
+.drawer.open{display:flex}
+.drawer > header{display:flex; align-items:center; gap:12px; padding:14px 18px; border-bottom:2px solid var(--rule); background:var(--surface)}
+.drawer > header h2{font-size:17px; margin-right:auto}
+.drawer .body{overflow-y:auto; overflow-x:hidden; padding:16px 18px 40px; display:flex; flex-direction:column; gap:20px}
+.drawer .body > *{flex:0 0 auto}
+.panel{background:var(--surface); border:1px solid var(--line); border-radius:8px; overflow:hidden}
+.panel > header{padding:9px 13px; border-bottom:1px solid var(--line); background:var(--surface-2)}
+.panel > header p{margin:3px 0 0; font-size:12.5px; color:var(--ink-3); line-height:1.35}
+.person{padding:12px 13px; border-bottom:1px solid var(--line); display:flex; flex-direction:column; gap:9px}
+.person:last-child{border-bottom:0}
+.person.inactive{opacity:.5}
+.prow{display:flex; flex-wrap:wrap; align-items:center; gap:8px}
+.prow > .lb{font-size:11.5px; color:var(--ink-3); flex:0 0 74px}
+input[type=text], input[type=number], select{font:inherit; font-size:13.5px; color:var(--ink); background:var(--surface); border:1px solid var(--line); border-radius:5px; padding:5px 7px}
+input[type=number]{width:62px; font-family:"IBM Plex Mono",monospace}
+.nameIn{font-family:"Archivo",sans-serif; font-weight:600; font-size:14.5px; flex:1 1 130px; min-width:110px}
+.tog{border:1px solid var(--line); background:var(--surface); border-radius:5px; padding:3px 9px; font-family:"Archivo",sans-serif; font-size:11.5px; font-weight:600; letter-spacing:.03em}
+.tog.on{background:var(--accent); border-color:var(--accent); color:var(--on-accent)}
+.tog.day.on{background:var(--crit); border-color:var(--crit); color:var(--on-accent)}
+.tog.rm{color:var(--ink-3)}
+.tog.rm:hover{color:var(--crit); border-color:var(--crit)}
+.tog.rm.armed{background:var(--crit); border-color:var(--crit); color:var(--on-accent)}
+.patgrid{display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:5px; width:100%}
+.patgrid .pc{display:flex; flex-direction:column; gap:3px; min-width:0}
+.patgrid .pc small{font-size:10px; color:var(--ink-3); text-align:center; font-family:"Archivo",sans-serif; font-weight:600; letter-spacing:.05em}
+.patgrid select{width:100%; padding:4px 2px; font-size:12px; text-align:center}
+.covtable{width:100%; border-collapse:collapse; font-size:13px}
+.covtable th, .covtable td{border:1px solid var(--line); padding:5px 4px; text-align:center}
+.covtable th{background:var(--surface-2); font-family:"Archivo",sans-serif; font-size:11px; font-weight:600}
+.covtable th.rh{text-align:left; padding-left:10px; font-size:12px}
+.covtable input{width:46px; text-align:center; padding:3px}
+.hint{font-size:12.5px; color:var(--ink-3); line-height:1.4}
+
+.banner{display:none; align-items:center; gap:9px; margin-top:12px; padding:9px 13px; border-radius:var(--radius); font-size:13.5px; background:var(--warn-bg); color:var(--warn); border:1px solid currentColor}
+.banner.show{display:flex}
+.foot{margin-top:26px; padding-top:12px; border-top:1px solid var(--line); font-size:12.5px; color:var(--ink-3); display:flex; flex-wrap:wrap; gap:6px 18px}
+.legend{margin:10px 2px 0; font-size:12.5px; color:var(--ink-3); line-height:1.5}
+.legend b{color:var(--ink-2); font-family:"IBM Plex Mono",monospace; font-weight:500}
+
+/* ---------- shift palette ---------- */
+.palette{display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-top:14px; padding:10px 12px;
+  background:var(--surface); border:1px solid var(--line); border-radius:8px; box-shadow:var(--shadow)}
+.palette .plabel{font-family:"Archivo",sans-serif; font-weight:600; font-size:11px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--ink-3); margin-right:2px}
+.palette .palhint{margin-left:auto; font-size:12.5px; color:var(--ink-3)}
+.palchip{display:inline-flex; align-items:center; gap:7px; padding:7px 11px; border-radius:6px; border:0;
+  font-family:"Archivo",sans-serif; font-weight:700; font-size:11px; letter-spacing:.07em; text-transform:uppercase;
+  cursor:grab; touch-action:none; -webkit-user-select:none; user-select:none}
+.palchip:active{cursor:grabbing}
+.palchip .t{font-family:"IBM Plex Mono",monospace; font-weight:400; font-size:11px; letter-spacing:0; text-transform:none; opacity:.85}
+.palchip.AM{background:var(--am-bg); color:var(--am-fg); box-shadow:inset 0 0 0 1px var(--am-edge)}
+.palchip.PM{background:var(--pm-bg); color:var(--pm-fg); box-shadow:inset 0 0 0 1px var(--pm-edge)}
+.palchip.NOC{background:var(--noc-bg); color:var(--noc-fg); box-shadow:inset 0 0 0 1px var(--noc-edge)}
+.palchip.K{background:var(--k-bg); color:var(--k-fg); box-shadow:inset 0 0 0 1px var(--k-edge)}
+.palchip.M{background:var(--m-bg); color:var(--m-fg); box-shadow:inset 0 0 0 1px var(--m-edge)}
+.palchip.OFF{background:var(--surface-2); color:var(--ink-2); box-shadow:inset 0 0 0 1px var(--line)}
+.palchip.armed{outline:2px solid var(--accent); outline-offset:2px}
+.palette.hasArmed .palhint{color:var(--accent); font-weight:600}
+
+.ghost{position:fixed; z-index:200; pointer-events:none; padding:7px 11px; border-radius:6px;
+  font-family:"Archivo",sans-serif; font-weight:700; font-size:11px; letter-spacing:.07em; text-transform:uppercase;
+  box-shadow:var(--shadow); opacity:.96; transform:translate(-50%,-50%)}
+body.isdragging{cursor:grabbing!important}
+body.isdragging .cell{cursor:grabbing!important}
+.cell.droptarget{box-shadow:inset 0 0 0 2px var(--accent)!important}
+.cell.nodrop{opacity:.35}
+
+@media (max-width:760px){
+  .boardbox{display:none}
+  .dayview{display:flex}
+  .strip{grid-template-columns:repeat(4,1fr)}
+  .toolbar .btn{flex:1 1 auto; justify-content:center}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important; transition:none!important}}
+
+/* ---------- print ---------- */
+@media print{
+  :root{--paper:#fff;--surface:#fff;--surface-2:#fff;--sunken:#fff;--line:#000;--ink:#000;--ink-2:#000;--ink-3:#333;
+        --am-bg:#d8ecdd;--pm-bg:#d6e5f4;--noc-bg:#f5dfce;--k-bg:#e0e4e7;--m-bg:#f6e8c2;
+        --am-fg:#000;--pm-fg:#000;--noc-fg:#000;--k-fg:#000;--m-fg:#000}
+  @page{size:landscape; margin:12mm}
+  body{background:#fff}
+  .toolbar,.issues,.dayview,.drawer,.scrim,.pop,.banner,.legend,.palette,.ghost,.foot{display:none!important}
+  .boardbox{display:block!important; box-shadow:none; border:0; overflow:visible}
+  .board{min-width:0}
+  .board th,.board td{border:1px solid #000!important}
+  .board thead th{position:static}
+  .board .nameCell{position:static}
+  .cell{box-shadow:none!important; -webkit-print-color-adjust:exact; print-color-adjust:exact}
+  .cell.timeoff{background:#ece5f3!important; color:#000!important}
+  .cell,.deptrow td,.daychip{-webkit-print-color-adjust:exact; print-color-adjust:exact}
+  .strip{display:none}
+  .wrap{padding:0; max-width:none}
+  .masthead{border-bottom:1px solid #000}
+}
+</style>
+
+<div class="wrap">
+  <div class="masthead">
+    <div class="prop">
+      <span class="eyebrow" id="propEyebrow">La Quinta &#xb7; Goodlettsville, TN</span>
+      <h1>Front Desk Duty Board</h1>
+    </div>
+    <div class="wknav">
+      <button class="iconbtn" id="prevWk" title="Previous week" aria-label="Previous week">&#x2039;</button>
+      <span class="range mono" id="wkRange">&#x2014;</span>
+      <button class="iconbtn" id="nextWk" title="Next week" aria-label="Next week">&#x203a;</button>
+      <button class="btn" id="thisWk">This week</button>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="menu-wrap">
+      <button class="btn primary" id="genBtn" aria-haspopup="true" aria-expanded="false">Build schedule &#x25be;</button>
+      <div class="menu" id="genMenu" role="menu">
+        <button data-mode="rebuild" role="menuitem"><b>Full rebuild</b><span>Stamp everyone's regular pattern, then fill what's uncovered. Replaces hand edits &#x2014; Undo puts them back.</span></button>
+        <button data-mode="patterns" role="menuitem"><b>Patterns only</b><span>Stamp regular patterns and leave the rest off. No auto-fill.</span></button>
+        <button data-mode="gaps" role="menuitem"><b>Fill gaps only</b><span>Keep every shift as it is and only staff the uncovered slots.</span></button>
+        <button data-mode="clear" role="menuitem"><b>Clear the week</b><span>Set everyone to off. Undo puts it back.</span></button>
+      </div>
+    </div>
+    <button class="btn" id="undoBtn" disabled>Undo</button>
+    <button class="btn" id="copyBtn">Copy last week</button>
+    <button class="btn" id="staffBtn">Staff &amp; rules</button>
+    <button class="btn" id="timeoffBtn">Time off <span class="badge" id="toBadge"></span></button>
+    <div class="spacer"></div>
+    <button class="btn" id="exportBtn">Export hours</button>
+    <button class="btn" id="pdfBtn">Download PDF</button>
+    <button class="btn" id="printBtn">Print</button>
+  </div>
+
+  <div class="banner" id="banner"><span id="bannerText"></span></div>
+
+  <div class="strip" id="strip"></div>
+
+  <div class="palette" id="palette">
+    <span class="plabel">Shifts</span>
+    <span class="palhint" id="palHint">Drag one onto a day, or click it then click the days you want</span>
+  </div>
+
+  <div class="boardbox">
+    <table class="board" id="board">
+      <thead id="boardHead"></thead>
+      <tbody id="boardBody"></tbody>
+    </table>
+  </div>
+
+  <div class="dayview" id="dayview"></div>
+
+  <p class="legend noprint" id="legendHelp">Drag a shift already on the board onto another day to move or swap it &#xb7; with a cell focused, <b>1</b>&thinsp;<b>2</b>&thinsp;<b>3</b> set the shift, <b>0</b> sets off, arrows move &#xb7; hold <b>shift</b> to add a second shift to a day &#xb7; <b>Full rebuild</b> replaces hand edits, <b>Fill gaps only</b> leaves them alone</p>
+
+  <section class="issues">
+    <header>
+      <h2 style="font-size:14px">Coverage check</h2>
+      <span class="count" id="issueCount">&#x2014;</span>
+      <span class="spacer"></span>
+      <span class="hint" id="savedAt"></span>
+    </header>
+    <div id="issueList"></div>
+  </section>
+
+  <div class="foot">
+    <span>Week runs <b id="footWeekStart">Wednesday</b>&#x2013;Tuesday, matching the posted sheet.</span>
+    <span>Night shift is credited to the day it starts.</span>
+  </div>
+</div>
+
+<div class="pop" id="pop" role="dialog" aria-label="Set shift"></div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="todrawer" aria-label="Time off">
+  <header>
+    <h2>Time off</h2>
+    <button class="iconbtn" id="closeTo" aria-label="Close">&#x2715;</button>
+  </header>
+  <div class="body">
+    <section class="panel">
+      <header>
+        <h3 style="font-size:13.5px">Log a request</h3>
+        <p>Approved days off are blocked from auto-fill, so a rebuild can never put someone back on a day you already gave them.</p>
+      </header>
+      <div class="addrow">
+        <select id="toWho" class="grow"></select>
+        <input type="date" id="toDate">
+        <input type="text" id="toNote" class="grow" placeholder="Note (optional)">
+        <button class="mini go" id="toAddApproved">Add approved</button>
+        <button class="mini" id="toAddPending">Add pending</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="calnav">
+        <button class="iconbtn" id="calPrev" aria-label="Previous month">&#x2039;</button>
+        <span class="m" id="calMonth">&#x2014;</span>
+        <button class="iconbtn" id="calNext" aria-label="Next month">&#x203a;</button>
+        <span class="hint" style="margin-left:auto">Click a day to log time off for it</span>
+      </div>
+      <div style="overflow-x:auto"><div class="cal" id="cal"></div></div>
+    </section>
+
+    <section class="panel">
+      <header>
+        <h3 style="font-size:13.5px">Requests</h3>
+        <p>Pending ones need a decision. Past requests older than a year are cleaned up automatically.</p>
+      </header>
+      <div id="reqList"></div>
+    </section>
+  </div>
+</aside>
+<aside class="drawer" id="drawer" aria-label="Staff and rules">
+  <header>
+    <h2>Staff &amp; rules</h2>
+    <button class="btn" id="addPerson">Add person</button>
+    <button class="iconbtn" id="closeDrawer" aria-label="Close">&#x2715;</button>
+  </header>
+  <div class="body">
+    <section class="panel">
+      <header>
+        <h3 style="font-size:13.5px">Coverage required</h3>
+        <p>How many people each shift needs, per day. A day short of this shows up as a red gap on the board.</p>
+      </header>
+      <div style="overflow-x:auto"><table class="covtable" id="covTable"></table></div>
+    </section>
+    <section class="panel">
+      <header>
+        <h3 style="font-size:13.5px">People</h3>
+        <p>Pattern is the shift someone works that weekday every week. Leave a day on <b>auto</b> and the builder decides. Blocked days and shift types are the guardrails auto-fill respects.</p>
+      </header>
+      <div id="people"></div>
+    </section>
+    <p class="hint">Changes save for everyone the moment you make them. Auto-fill also enforces an 8-hour turnaround, so nobody gets a 10p&#x2013;6a night followed by a 6a&#x2013;2p morning.</p>
+  </div>
+</aside>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script>
+(function(){
+"use strict";
+
+/* ========== domain ========== */
+var SHIFTS = {
+  AM:  {id:"AM",  label:"6a\u20132p",  full:"6:00am \u2013 2:00pm",  start:6,  end:14, hrs:8},
+  PM:  {id:"PM",  label:"2p\u201310p", full:"2:00pm \u2013 10:00pm", start:14, end:22, hrs:8},
+  NOC: {id:"NOC", label:"10p\u20136a", full:"10:00pm \u2013 6:00am", start:22, end:30, hrs:8},
+  K:   {id:"K",   label:"5a\u201310a", full:"5:00am \u2013 10:00am", start:5,  end:10, hrs:5},
+  M:   {id:"M",   label:"6a\u20132p",  full:"6:00am \u2013 2:00pm",  start:6,  end:14, hrs:8}
+};
+var DEPTS = [
+  {id:"front",   name:"Front Desk",  shifts:["AM","PM","NOC"]},
+  {id:"kitchen", name:"Kitchen",     shifts:["K"]},
+  {id:"maint",   name:"Maintenance", shifts:["M"]}
+];
+var DEPT_BY = {}; DEPTS.forEach(function(d){DEPT_BY[d.id]=d;});
+var DOW = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+var DOW_FULL = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+var WEEK_START_DOW = 3; // Wednesday, matching the posted sheet
+
+/* seed roster \u2014 taken from the posted 9/9\u20139/15 sheet */
+function seedRoster(){
+  function P(list){ var o={}; for(var i=0;i<7;i++){ o[i]=list[i]||""; } return o; }
+  // pattern indexed by real day-of-week 0=Sun \u2026 6=Sat
+  var staff = [
+    {id:"linda",   name:"Linda",   dept:"front", shifts:["AM"],       offDays:[], maxDays:5, active:true,
+     pattern:P(["","AM","AM","off","off","off","off"])},
+    {id:"khalil",  name:"Khalil",  dept:"front", shifts:["AM","PM"],  offDays:[], maxDays:5, active:true,
+     pattern:P(["off","off","PM","PM","PM","off","AM"])},
+    {id:"allen",   name:"Allen",   dept:"front", shifts:["PM"],       offDays:[], maxDays:5, active:true,
+     pattern:P(["PM","off","off","off","off","PM","PM"])},
+    {id:"ingrid",  name:"Ingrid",  dept:"front", shifts:["AM","PM"],  offDays:[], maxDays:5, active:true,
+     pattern:P(["AM","PM","off","off","off","off","off"])},
+    {id:"andres",  name:"Andres",  dept:"front", shifts:["AM"],       offDays:[], maxDays:5, active:true,
+     pattern:P(["off","off","off","off","AM","AM","off"])},
+    {id:"melisha", name:"Melisha", dept:"front", shifts:["NOC"],      offDays:[], maxDays:5, active:true,
+     pattern:P(["off","off","NOC","off","NOC","NOC","off"])},
+    {id:"alma",    name:"Alma",    dept:"front", shifts:["NOC"],      offDays:[], maxDays:5, active:true,
+     pattern:P(["off","NOC","off","NOC","off","off","off"])},
+    {id:"alex",    name:"Alex",    dept:"front", shifts:["NOC"],      offDays:[], maxDays:5, active:true,
+     pattern:P(["NOC","off","off","off","off","off","NOC"])},
+    {id:"rod",     name:"Rod",     dept:"front", shifts:["AM"],       offDays:[], maxDays:5, active:false,
+     pattern:P(["","","","","","",""])},
+    {id:"kathy",   name:"Kathy",   dept:"kitchen", shifts:["K"],      offDays:[], maxDays:7, active:true,
+     pattern:P(["K","K","K","K","K","K","K"])},
+    {id:"pedro",   name:"Pedro",   dept:"maint", shifts:["M"],        offDays:[0,6], maxDays:5, active:true,
+     pattern:P(["off","M","M","M","M","M","off"])}
+  ];
+  var coverage = {};
+  DEPTS.forEach(function(d){
+    coverage[d.id] = {};
+    for(var dw=0; dw<7; dw++){
+      coverage[d.id][dw] = {};
+      d.shifts.forEach(function(sh){
+        var need = 1;
+        if(d.id === "maint" && (dw === 0 || dw === 6)) need = 0;
+        coverage[d.id][dw][sh] = need;
+      });
+    }
+  });
+  return {property:"La Quinta \u00b7 Goodlettsville, TN", staff:staff, coverage:coverage};
+}
+
+/* ========== dates ========== */
+function pad(n){ return (n<10?"0":"")+n; }
+function iso(d){ return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()); }
+function parseISO(s){ var p=s.split("-"); return new Date(+p[0], +p[1]-1, +p[2]); }
+function addDays(d,n){ var x=new Date(d.getTime()); x.setDate(x.getDate()+n); return x; }
+function weekStartFor(d){
+  var back = (d.getDay() - WEEK_START_DOW + 7) % 7;
+  return addDays(d, -back);
+}
+function shortDate(d){ return (d.getMonth()+1)+"/"+d.getDate(); }
+function daysOf(start){
+  var out=[]; for(var i=0;i<7;i++){ var d=addDays(start,i); out.push({date:d, dow:d.getDay(), ymd:iso(d), i:i}); }
+  return out;
+}
+
+/* ========== state ========== */
+var roster = seedRoster();
+var weekStart = weekStartFor(new Date());
+var week = blankWeek(weekStart);
+var timeoff = {requests:{}};   // id -> {staffId, date:"YYYY-MM-DD", status, note, createdAt}
+var offIdx = {};               // "staffId|YYYY-MM-DD" -> status, rebuilt whenever timeoff changes
+var db = null, readOnly = false, downloads = null;
+var unsubWeek = null, unsubRoster = null;
+var history = [];
+
+function pushHistory(){
+  try{
+    history.push(JSON.parse(JSON.stringify({assign:week.assign||{}, locks:week.locks||{}})));
+    if(history.length > 30) history.shift();
+  }catch(e){}
+  updateUndo();
+}
+function updateUndo(){
+  var b = document.getElementById("undoBtn");
+  if(!b) return;
+  b.disabled = readOnly || !history.length;
+  b.textContent = history.length ? ("Undo (" + history.length + ")") : "Undo";
+}
+function undo(){
+  if(!history.length) return;
+  var prev = normalizeWeek(history.pop(), week.start);
+  week.assign = prev.assign; week.locks = prev.locks;
+  saveWeek(); render(); updateUndo();
+  markSaved("Undone \u2014 " + (history.length ? history.length + " more step" + (history.length===1?"":"s") + " back" : "back to where you started"));
+}
+
+function blankWeek(start){
+  var a={}, l={};
+  roster.staff.forEach(function(s){ a[s.id]=["off","off","off","off","off","off","off"]; l[s.id]=[0,0,0,0,0,0,0]; });
+  return {start:iso(start), assign:a, locks:l, builtAt:""};
+}
+/* Snapshots from the store are DEEP FROZEN and reused across deliveries, so
+   nothing read from one may be kept in state or mutated \u2014 adding a key to a
+   frozen object throws "object is not extensible" and a delete throws under
+   strict mode. Everything coming out of a snapshot goes through this first. */
+function thaw(v){
+  if(v === null || typeof v !== "object") return v;
+  try{ return JSON.parse(JSON.stringify(v)); }
+  catch(e){ return v; }
+}
+
+/* The document store hands a nested array back as a {"0":..,"1":..} map, so
+   anything read from it has to be coerced to a real 7-slot array before use. */
+function toArr7(v, fill){
+  var out = [];
+  for(var i = 0; i < 7; i++){
+    var x = (v && typeof v === "object") ? v[i] : undefined;
+    out.push(x === undefined || x === null ? fill : x);
+  }
+  return out;
+}
+function normalizeWeek(wRaw, startISO){
+  var w = thaw(wRaw);
+  var assign = {}, locks = {};
+  var src = (w && typeof w.assign === "object" && w.assign) ? w.assign : {};
+  var lsrc = (w && typeof w.locks === "object" && w.locks) ? w.locks : {};
+  Object.keys(src).forEach(function(k){ assign[k] = toArr7(src[k], "off"); });
+  Object.keys(lsrc).forEach(function(k){ locks[k] = toArr7(lsrc[k], 0); });
+  return {start: startISO, assign: assign, locks: locks, builtAt: (w && w.builtAt) || ""};
+}
+function assignOf(id){
+  if(!week.assign) week.assign = {};
+  var v = week.assign[id];
+  if(!Array.isArray(v)) week.assign[id] = toArr7(v, "off");
+  return week.assign[id];
+}
+function locksOf(id){
+  if(!week.locks) week.locks = {};
+  var v = week.locks[id];
+  if(!Array.isArray(v)) week.locks[id] = toArr7(v, 0);
+  return week.locks[id];
+}
+
+/* ========== a day holds one shift, or two ==========
+   A day is still a plain string: "AM" for one shift, "AM+NOC" when someone
+   works a double. Storage, the wire format and every week saved before
+   doubles existed are unchanged \u2014 anything that needs the parts calls
+   shList(), which returns [] for "off" and one entry for the ordinary case. */
+var MAX_PER_DAY = 2;
+function dayYmd(i){ var d = daysOf(parseISO(week.start))[i]; return d ? d.ymd : ""; }
+function shList(v){
+  if(!v || v === "off") return [];
+  return String(v).split("+").filter(function(x){ return SHIFTS[x]; });
+}
+function shJoin(list){
+  var seen = {}, out = [];
+  (list || []).forEach(function(x){ if(SHIFTS[x] && !seen[x]){ seen[x] = 1; out.push(x); } });
+  out.sort(function(a,b){ return SHIFTS[a].start - SHIFTS[b].start; });
+  return out.length ? out.join("+") : "off";
+}
+function worksShift(v, sh){ return shList(v).indexOf(sh) !== -1; }
+function isDouble(v){ return shList(v).length > 1; }
+function addShift(v, sh){
+  var l = shList(v);
+  if(l.indexOf(sh) !== -1) return shJoin(l);
+  if(l.length >= MAX_PER_DAY) return shJoin([sh]);   // already doubled \u2014 replace
+  return shJoin(l.concat([sh]));
+}
+function dropShift(v, sh){
+  return shJoin(shList(v).filter(function(x){ return x !== sh; }));
+}
+function dayName(v){ return shList(v).map(shiftName).join(" + "); }
+function dayTimes(v){ return shList(v).map(function(x){ return SHIFTS[x].label; }).join(" + "); }
+function dayFull(v){ return shList(v).map(function(x){ return SHIFTS[x].full; }).join(" + "); }
+
+/* ========== time off ========== */
+function rebuildOffIndex(){
+  offIdx = {};
+  var reqs = (timeoff && timeoff.requests) || {};
+  Object.keys(reqs).forEach(function(k){
+    var r = reqs[k];
+    if(r && !r.deleted && r.staffId && r.date) offIdx[r.staffId + "|" + r.date] = r.status || "pending";
+  });
+}
+function offStatus(staffId, ymd){ return offIdx[staffId + "|" + ymd] || null; }
+function isOffApproved(staffId, ymd){ return offStatus(staffId, ymd) === "approved"; }
+function requestList(){
+  var reqs = (timeoff && timeoff.requests) || {};
+  return Object.keys(reqs).map(function(k){
+    var r = reqs[k] || {};
+    return {id:k, deleted:!!r.deleted, staffId:r.staffId, date:r.date,
+            status:r.status || "pending", note:r.note || "", createdAt:r.createdAt || ""};
+  }).filter(function(r){ return !r.deleted && r.staffId && r.date; })
+    .sort(function(a,b){ return a.date < b.date ? -1 : (a.date > b.date ? 1 : 0); });
+}
+function pendingCount(){
+  return requestList().filter(function(r){ return r.status === "pending"; }).length;
+}
+function pruneOldRequests(){
+  var cutoff = iso(addDays(new Date(), -365));
+  var reqs = (timeoff && timeoff.requests) || {}, changed = false;
+  Object.keys(reqs).forEach(function(k){
+    var r = reqs[k];
+    if(!r){ delete reqs[k]; changed = true; return; }
+    if(r.date && r.date < cutoff){ delete reqs[k]; changed = true; }
+  });
+  return changed;
+}
+
+/* ========== rules ========== */
+function coverNeed(deptId, dow, sh){
+  var c = roster.coverage && roster.coverage[deptId] && roster.coverage[deptId][dow];
+  var v = c ? c[sh] : undefined;
+  return (typeof v === "number") ? v : 0;
+}
+function canWork(s, dow, sh){
+  if(!s.active) return false;
+  if((s.offDays||[]).indexOf(dow) !== -1) return false;
+  return (s.shifts||[]).indexOf(sh) !== -1;
+}
+/* Hours between one shift ending and the next starting. daysApart is 0 for two
+   shifts on the same day, 1 across midnight. NOC ends at 30 \u2014 6am the day after
+   it starts \u2014 so the arithmetic already accounts for the overnight. */
+function gapBetween(prev, next, daysApart){
+  return (SHIFTS[next].start + 24*daysApart) - SHIFTS[prev].end;
+}
+/* The first turnaround under 8 hours around day i, given the shifts `list`
+   sits there \u2014 inside the day for a double, and against the days either side. */
+function restProblem(arr, i, list, backOnly){
+  var l = shJoin(list) === "off" ? [] : shList(shJoin(list));
+  if(!l.length) return null;
+  for(var k = 1; k < l.length; k++){
+    var g = gapBetween(l[k-1], l[k], 0);
+    if(g < 8) return {a:l[k-1], b:l[k], gap:g};
+  }
+  if(i > 0){
+    var pv = shList(arr[i-1]);
+    if(pv.length){
+      var g2 = gapBetween(pv[pv.length-1], l[0], 1);
+      if(g2 < 8) return {a:pv[pv.length-1], b:l[0], gap:g2};
+    }
+  }
+  if(i < 6 && !backOnly){
+    var nx = shList(arr[i+1]);
+    if(nx.length){
+      var g3 = gapBetween(l[l.length-1], nx[0], 1);
+      if(g3 < 8) return {a:l[l.length-1], b:nx[0], gap:g3};
+    }
+  }
+  return null;
+}
+/* Would sh fit at day i as the only shift there? */
+function restOk(arr, i, sh){
+  if(!SHIFTS[sh]) return true;
+  return !restProblem(arr, i, [sh]);
+}
+/* Would sh fit alongside whatever is already on day i? */
+function restOkAdded(arr, i, sh){
+  if(!SHIFTS[sh]) return true;
+  return !restProblem(arr, i, shList(arr[i]).concat([sh]));
+}
+/* A double is one day worked and two shifts' worth of hours. */
+function daysWorked(arr){ var a=Array.isArray(arr)?arr:toArr7(arr,"off"), n=0;
+  for(var i=0;i<a.length;i++){ if(shList(a[i]).length) n++; } return n; }
+function hoursOf(arr){ var a=Array.isArray(arr)?arr:toArr7(arr,"off"), h=0;
+  for(var i=0;i<a.length;i++){
+    shList(a[i]).forEach(function(x){ h += SHIFTS[x].hrs; });
+  } return h; }
+function doublesIn(arr){ var a=Array.isArray(arr)?arr:toArr7(arr,"off"), n=0;
+  for(var i=0;i<a.length;i++){ if(isDouble(a[i])) n++; } return n; }
+
+function build(mode){
+  var days = daysOf(parseISO(week.start));
+  var active = roster.staff.filter(function(s){ return s.active; });
+  var next = {};
+  active.forEach(function(s){
+    var cur = assignOf(s.id).slice();
+    for(var i=0;i<7;i++){
+      if(mode === "gaps") continue;
+      if(mode === "clear"){ cur[i] = "off"; continue; }
+      if(isOffApproved(s.id, days[i].ymd)){ cur[i] = "off"; continue; }
+      var p = (s.pattern||{})[days[i].dow];
+      cur[i] = (p && p !== "" && p !== "auto") ? p : "off";
+    }
+    next[s.id] = cur;
+  });
+  roster.staff.forEach(function(s){ if(!next[s.id]) next[s.id] = ["off","off","off","off","off","off","off"]; });
+
+  if(mode === "patterns" || mode === "clear"){ week.assign = next; return {filled:0, gaps:countGaps(next, days)}; }
+
+  var count = {}; active.forEach(function(s){ count[s.id] = daysWorked(next[s.id]); });
+  var filled = 0;
+
+  for(var i=0;i<7;i++){
+    for(var di=0; di<DEPTS.length; di++){
+      var d = DEPTS[di];
+      for(var si=0; si<d.shifts.length; si++){
+        var sh = d.shifts[si];
+        var need = coverNeed(d.id, days[i].dow, sh);
+        var have = active.filter(function(s){ return s.dept===d.id && worksShift(next[s.id][i], sh); }).length;
+        var guard = 0;
+        while(have < need && guard++ < 20){
+          /* Auto-fill only ever uses someone whose day is still empty. Working
+             a double is a call a manager makes by hand, not one the builder
+             makes for them. */
+          var pool = active.filter(function(s){
+            return s.dept === d.id
+              && !shList(next[s.id][i]).length
+              && canWork(s, days[i].dow, sh)
+              && !isOffApproved(s.id, days[i].ymd)
+              && count[s.id] < (s.maxDays == null ? 5 : s.maxDays)
+              && restOk(next[s.id], i, sh);
+          });
+          if(!pool.length) break;
+          pool.sort(function(a,b){
+            return (count[a.id]-count[b.id]) || (hoursOf(next[a.id])-hoursOf(next[b.id])) || a.name.localeCompare(b.name);
+          });
+          var pick = pool[0];
+          next[pick.id][i] = sh;
+          count[pick.id]++;
+          have++; filled++;
+        }
+      }
+    }
+  }
+  week.assign = next;
+  return {filled:filled, gaps:countGaps(next, days)};
+}
+function countGaps(assign, days){
+  var n = 0;
+  for(var i=0;i<7;i++){
+    DEPTS.forEach(function(d){
+      d.shifts.forEach(function(sh){
+        var need = coverNeed(d.id, days[i].dow, sh);
+        var have = roster.staff.filter(function(s){ return s.active && s.dept===d.id && assign[s.id] && worksShift(assign[s.id][i], sh); }).length;
+        if(have < need) n += (need - have);
+      });
+    });
+  }
+  return n;
+}
+
+function audit(){
+  var days = daysOf(parseISO(week.start));
+  var out = [], byDay = [];
+  for(var i=0;i<7;i++) byDay.push({gaps:0, warns:0});
+
+  for(var i=0;i<7;i++){
+    (function(i){
+      DEPTS.forEach(function(d){
+        d.shifts.forEach(function(sh){
+          var need = coverNeed(d.id, days[i].dow, sh);
+          var on = roster.staff.filter(function(s){ return s.active && s.dept===d.id && worksShift(assignOf(s.id)[i], sh); });
+          if(on.length < need){
+            byDay[i].gaps += (need - on.length);
+            out.push({sev:"crit", day:i,
+              text:(need-on.length)+" unstaffed on "+d.name+" "+SHIFTS[sh].label,
+              when:DOW_FULL[days[i].dow]+" "+shortDate(days[i].date)});
+          } else if(need > 0 && on.length > need){
+            byDay[i].warns++;
+            out.push({sev:"warn", day:i,
+              text:(on.length)+" people on "+d.name+" "+SHIFTS[sh].label+" (needs "+need+")",
+              when:DOW_FULL[days[i].dow]+" "+shortDate(days[i].date)});
+          }
+        });
+      });
+    })(i);
+  }
+
+  roster.staff.forEach(function(s){
+    if(!s.active) return;
+    var arr = assignOf(s.id);
+    for(var i=0;i<7;i++){
+      var list = shList(arr[i]);
+      if(!list.length) continue;
+      var when = DOW_FULL[days[i].dow]+" "+shortDate(days[i].date);
+      if(isOffApproved(s.id, days[i].ymd)){
+        byDay[i].gaps += 0; byDay[i].warns++;
+        out.push({sev:"crit", day:i,
+          text:s.name+" is scheduled on approved time off", when:when});
+      } else if((s.offDays||[]).indexOf(days[i].dow) !== -1){
+        byDay[i].warns++;
+        out.push({sev:"warn", day:i, text:s.name+" is scheduled on a blocked day", when:when});
+      } else {
+        /* Each half of a double is its own training question. */
+        list.forEach(function(sh){
+          if((s.shifts||[]).indexOf(sh) === -1){
+            byDay[i].warns++;
+            out.push({sev:"warn", day:i, text:s.name+" isn't trained for "+SHIFTS[sh].label, when:when});
+          }
+        });
+      }
+      /* Turnaround, counting the gap inside a double as well as the one
+         coming off yesterday. Looking back only \u2014 the next day checks itself. */
+      var rp = restProblem(arr, i, list, true);
+      if(rp){
+        byDay[i].gaps += 0; byDay[i].warns++;
+        out.push({sev:"crit", day:i,
+          text:s.name+" gets only "+rp.gap+"h off between "+SHIFTS[rp.a].label+" and "+SHIFTS[rp.b].label,
+          when:when});
+      }
+      if(isDouble(arr[i])){
+        byDay[i].warns++;
+        out.push({sev:"warn", day:i,
+          text:s.name+" is working a double \u2014 "+dayTimes(arr[i])+" ("+
+               shList(arr[i]).reduce(function(h,x){ return h + SHIFTS[x].hrs; }, 0)+"h)",
+          when:when});
+      }
+    }
+    var dw = daysWorked(arr), hr = hoursOf(arr);
+    var mx = (s.maxDays == null ? 5 : s.maxDays);
+    if(dw > mx) out.push({sev:"warn", day:-1, text:s.name+" is on "+dw+" days, over the "+mx+"-day cap", when:"This week"});
+    if(hr > 40) out.push({sev:"warn", day:-1, text:s.name+" is at "+hr+" hours \u2014 "+(hr-40)+" over time", when:"This week"});
+  });
+
+  out.sort(function(a,b){ return (a.sev===b.sev?0:(a.sev==="crit"?-1:1)) || (a.day-b.day); });
+  return {issues:out, byDay:byDay};
+}
+
+/* ========== persistence ========== */
+function markSaved(txt){ var e=document.getElementById("savedAt"); if(e) e.textContent = txt || ""; }
+function showBanner(msg){
+  var b=document.getElementById("banner");
+  document.getElementById("bannerText").textContent = msg;
+  b.classList.add("show");
+}
+/* localRev races ahead of savedRev while an edit is unsaved. While they differ,
+   incoming snapshots are ignored so a slow server copy can't wipe a fresh edit. */
+var localRev = 0, savedRev = 0, saveTimer = null;
+function saveWeek(){
+  if(readOnly){ markSaved("View only \u2014 ask a manager to make changes"); return; }
+  if(!db){ markSaved("Working locally \u2014 changes won't be shared"); return; }
+  localRev++;
+  var rev = localRev;
+  markSaved("Saving\u2026");
+  if(saveTimer) clearTimeout(saveTimer);
+  saveTimer = setTimeout(function(){
+    saveTimer = null;
+    var payload = {start:week.start, assign:week.assign, locks:week.locks, builtAt:week.builtAt || ""};
+    db.doc("weeks/"+week.start).set(payload).then(function(){
+      if(rev > savedRev) savedRev = rev;
+      if(savedRev >= localRev){ savedRev = localRev; markSaved("Saved"); }
+    })["catch"](function(e){
+      savedRev = localRev; // resync so remote updates aren't blocked forever
+      if(e && e.code === "invalid_argument"){
+        readOnly = true; render();
+        showBanner("You have view-only access to this board. Changes you make here won't be saved.");
+      } else {
+        markSaved("Couldn't save \u2014 check your connection");
+      }
+    });
+  }, 300);
+}
+var toRev = 0, toSaved = 0, toTimer = null;
+function saveTimeoff(){
+  rebuildOffIndex();
+  if(readOnly){
+    showBanner("You have view-only access to this board, so that time-off change wasn't saved.");
+    return;
+  }
+  if(!db){ markSaved("Working locally \u2014 time off won't be shared"); return; }
+  toRev++;
+  var rev = toRev;
+  if(toTimer) clearTimeout(toTimer);
+  toTimer = setTimeout(function(){
+    toTimer = null;
+    db.doc("config/timeoff").set({requests: timeoff.requests || {}})
+      .then(function(){
+        if(rev > toSaved) toSaved = rev;
+        if(toSaved >= toRev){ toSaved = toRev; document.getElementById("banner").classList.remove("show"); }
+      })
+      ["catch"](function(e){
+        toSaved = toRev;
+        if(e && e.code === "invalid_argument"){
+          readOnly = true; render();
+          showBanner("You have view-only access to this board. Changes you make here won't be saved.");
+        } else {
+          showBanner("That time-off change didn't save \u2014 check your connection and try again.");
+        }
+      });
+  }, 300);
+}
+var rosterRev = 0, rosterSaved = 0, rosterTimer = null;
+function saveRoster(){
+  if(!db || readOnly) return;
+  rosterRev++;
+  var rev = rosterRev;
+  if(rosterTimer) clearTimeout(rosterTimer);
+  rosterTimer = setTimeout(function(){
+    rosterTimer = null;
+    db.doc("config/roster").set({property:roster.property, staff:roster.staff, coverage:roster.coverage})
+      .then(function(){ if(rev > rosterSaved) rosterSaved = rev; if(rosterSaved >= rosterRev) rosterSaved = rosterRev; })
+      ["catch"](function(e){
+        rosterSaved = rosterRev;
+        if(e && e.code === "invalid_argument"){
+          readOnly = true; render();
+          showBanner("You have view-only access to this board. Changes you make here won't be saved.");
+        }
+      });
+  }, 300);
+}
+function seedFromPatterns(startISO){
+  week = blankWeek(parseISO(startISO));
+  build("rebuild");
+  week.builtAt = "";
+}
+function loadWeek(startISO){
+  if(unsubWeek){ unsubWeek(); unsubWeek = null; }
+  if(!db){ render(); return; }
+  var firstDefinitive = true;
+  unsubWeek = db.doc("weeks/"+startISO).onSnapshot(function(snap){
+    if(startISO !== week.start) return;          // stale listener from an earlier week
+    if(localRev !== savedRev) return;            // our edit is still in flight \u2014 keep it
+    if(snap.exists){
+      week = normalizeWeek(snap.data(), startISO);
+      markSaved("Saved");
+    } else if(!snap.metadata.fromCache){
+      seedFromPatterns(startISO);
+      if(firstDefinitive){
+        firstDefinitive = false;
+        week.builtAt = new Date().toISOString();
+        saveWeek();
+        markSaved("New week drafted from everyone's pattern");
+      }
+    }
+    render();
+  }, function(){ render(); });
+}
+
+/* ========== rendering ========== */
+function shiftCellLabel(sh){ return SHIFTS[sh] ? SHIFTS[sh].label : "off"; }
+
+function render(){
+  /* Rebuilding the board mid-drag pulls the cells out from under the pointer.
+     Hold the repaint until the drag lands. */
+  if(drag && drag.live){ renderQueued = true; return; }
+  try{ paint(); }
+  catch(err){
+    showBanner("Something went wrong drawing the board: " + (err && err.message ? err.message : err) +
+               " \u2014 reload the page. Your saved schedule is untouched.");
+  }
+}
+function paint(){
+  killGhosts();
+  var start = parseISO(week.start), days = daysOf(start), end = addDays(start,6);
+  document.getElementById("propEyebrow").textContent = roster.property || "";
+  document.getElementById("wkRange").textContent = shortDate(start)+" \u2013 "+shortDate(end)+", "+end.getFullYear();
+  document.getElementById("footWeekStart").textContent = DOW_FULL[WEEK_START_DOW];
+
+  var a = audit();
+  renderPalette();
+  renderStrip(days, a.byDay);
+  renderBoard(days, a);
+  renderDayView(days);
+  renderIssues(a.issues);
+
+  ["genBtn","copyBtn"].forEach(function(id){ document.getElementById(id).disabled = readOnly; });
+  var badge = document.getElementById("toBadge");
+  if(badge){ var pc = pendingCount(); badge.textContent = pc ? String(pc) : ""; }
+  if(document.getElementById("todrawer").classList.contains("open")) renderTimeoffIfChanged();
+  updateUndo();
+}
+
+function renderStrip(days, byDay){
+  var el = document.getElementById("strip"); el.innerHTML = "";
+  days.forEach(function(d, i){
+    var st = byDay[i].gaps ? "critState" : (byDay[i].warns ? "warnState" : "");
+    var msg = byDay[i].gaps ? (byDay[i].gaps + (byDay[i].gaps===1?" gap":" gaps"))
+            : (byDay[i].warns ? (byDay[i].warns + " to check") : "Covered");
+    var div = document.createElement("div");
+    div.className = "daychip " + st;
+    div.innerHTML = '<span class="top"><span class="d">'+DOW[d.dow]+'</span><span class="dt mono">'+shortDate(d.date)+'</span></span><span class="st">'+msg+'</span>';
+    el.appendChild(div);
+  });
+}
+
+function renderBoard(days, a){
+  var head = document.getElementById("boardHead"), body = document.getElementById("boardBody");
+  head.innerHTML = ""; body.innerHTML = "";
+
+  var tr = document.createElement("tr");
+  tr.innerHTML = '<th class="nameCell colName">Name</th>' +
+    days.map(function(d){ return '<th><span class="dd">'+DOW[d.dow]+'</span><span class="dnum">'+shortDate(d.date)+'</span></th>'; }).join("") +
+    '<th class="colTot">Hours</th>';
+  head.appendChild(tr);
+
+  DEPTS.forEach(function(dep){
+    var people = roster.staff.filter(function(s){ return s.dept === dep.id; });
+    if(!people.length) return;
+    var needText = dep.shifts.map(function(sh){
+      var counts = [];
+      for(var dw=0; dw<7; dw++) counts.push(coverNeed(dep.id, dw, sh));
+      var uniq = counts.filter(function(v,i2,arr2){ return arr2.indexOf(v)===i2; });
+      var per = (uniq.length === 1) ? uniq[0] : (Math.min.apply(null,counts)+"\u2013"+Math.max.apply(null,counts));
+      return per + "\u00d7 " + SHIFTS[sh].label;
+    }).join("  \u00b7  ");
+
+    var band = document.createElement("tr");
+    band.className = "deptrow";
+    band.innerHTML = '<td colspan="'+(days.length+2)+'"><span class="dl"><span class="eyebrow">'+dep.name+'</span><span class="need mono">'+needText+' daily</span></span></td>';
+    body.appendChild(band);
+
+    people.forEach(function(s){
+     try{
+      var arr = assignOf(s.id);
+      var row = document.createElement("tr");
+      if(!s.active) row.style.opacity = ".45";
+      var nameTd = document.createElement("td");
+      nameTd.className = "nameCell";
+      nameTd.innerHTML = '<span class="nm">'+esc(s.name)+(s.active?"":' <span class="sub">(inactive)</span>')+'</span>' +
+                         '<span class="sub">'+ (s.shifts||[]).map(function(x){return SHIFTS[x].label;}).join(", ") + '</span>';
+      row.appendChild(nameTd);
+
+      days.forEach(function(d, i){
+        var td = document.createElement("td");
+        var sh = arr[i] || "off";
+        var list = shList(sh);
+        var offSt = offStatus(s.id, d.ymd);
+        var btn = document.createElement("button");
+        btn.className = "cell " + (list.length ? (list[0] + (list.length > 1 ? " dbl" : ""))
+          : (offSt === "approved" ? "timeoff" : (offSt === "pending" ? "timeoff pend" : "off")));
+        btn.type = "button";
+        btn.disabled = readOnly;
+        var bad = "";
+        if(list.length){
+          if((s.offDays||[]).indexOf(d.dow) !== -1) bad = "warn";
+          if(list.some(function(x){ return (s.shifts||[]).indexOf(x) === -1; })) bad = "warn";
+          if(restProblem(arr, i, list)) bad = "crit";
+          if(offSt === "approved") bad = "crit";
+        }
+        btn.innerHTML = (list.length
+            ? (list.length > 1
+                /* Two shifts, each keeping its own colour so a double reads as
+                   two shifts at a glance rather than one odd-looking block. */
+                ? list.map(function(x){
+                    return '<span class="part" style="background:var(--'+x.toLowerCase()+'-bg);color:var(--'+x.toLowerCase()+'-fg)">' +
+                           '<span class="lbl">'+shiftName(x)+'</span><span>'+SHIFTS[x].label+'</span></span>';
+                  }).join("")
+                : '<span class="lbl">'+shiftName(list[0])+'</span><span>'+SHIFTS[list[0]].label+'</span>')
+            : '<span>'+(offSt === "approved" ? "Time off"
+                      : (offSt === "pending" ? "Off req." : "off"))+'</span>')
+          + (bad ? '<span class="flag '+bad+'"></span>' : '');
+        btn.setAttribute("aria-label", s.name+", "+DOW_FULL[d.dow]+": "+
+          (list.length ? dayFull(sh) + (list.length > 1 ? " (double)" : "") +
+                         (offSt === "approved" ? " \u2014 on approved time off" : "")
+                      : (offSt === "approved" ? "approved time off" : "off")));
+        btn.setAttribute("data-sid", s.id);
+        btn.setAttribute("data-day", i);
+        btn.setAttribute("data-dept", s.dept);
+        btn.setAttribute("data-dow", d.dow);
+        if(!readOnly){
+          btn.addEventListener("pointerdown", function(ev){
+            startDrag(ev, {kind:"cell", shift:(arr[i] || "off"), sid:s.id, day:i, dept:s.dept}, ev.currentTarget);
+          });
+        }
+        btn.addEventListener("keydown", onCellKey);
+        btn.addEventListener("click", function(ev){
+          if(suppressClick) return;                     // finished a drag, not a click
+          if(!readOnly && armedShift !== null){         // painting with an armed palette chip
+            if(!shiftFitsDept(armedShift, s.dept)){
+              markSaved(chipLabel(armedShift) + " isn't a " + (DEPT_BY[s.dept] ? DEPT_BY[s.dept].name : "") + " shift");
+              return;
+            }
+            pushHistory();
+            /* Shift-click paints a second shift on instead of replacing. */
+            var a = assignOf(s.id);
+            a[i] = (ev.shiftKey && armedShift !== "off") ? addShift(a[i], armedShift) : armedShift;
+            saveWeek(); render();
+            markSaved(s.name + (armedShift === "off" ? " set to off" : " \u2192 " + chipLabel(a[i])));
+            return;
+          }
+          openPop(ev.currentTarget, s, i, d.dow);
+        });
+        td.appendChild(btn);
+        row.appendChild(td);
+      });
+
+      var hr = hoursOf(arr), dwk = daysWorked(arr);
+      var tot = document.createElement("td");
+      tot.className = "totCell" + (hr > 40 ? " ot" : "");
+      tot.innerHTML = '<div class="h">'+hr+'h</div><div class="dz">'+dwk+(dwk===1?" day":" days")+'</div>';
+      row.appendChild(tot);
+      body.appendChild(row);
+     }catch(err){
+      /* One unreadable record must never cost you the rest of the board. */
+      var bad = document.createElement("tr");
+      bad.innerHTML = '<td class="nameCell">'+esc(s.name || "Unknown")+'</td>' +
+                      '<td colspan="'+(days.length+1)+'" style="padding:8px 10px;color:var(--crit);font-size:13px">' +
+                      'This row couldn\'t be drawn \u2014 open Staff &amp; rules and re-save this person.</td>';
+      body.appendChild(bad);
+     }
+    });
+  });
+}
+function shiftName(sh){
+  if(sh === "AM") return "AM";
+  if(sh === "PM") return "PM";
+  if(sh === "NOC") return "Night";
+  if(sh === "K") return "Kitchen";
+  if(sh === "M") return "Maint";
+  return "";
+}
+
+function slotRow(sh, who, gap, onClick){
+  var row = document.createElement(onClick ? "button" : "div");
+  row.className = "slot";
+  if(onClick) row.type = "button";
+  row.innerHTML = '<span class="tag '+sh+'">'+shiftName(sh)+'</span>' +
+                  '<span class="who'+(gap ? " gap" : "")+'">'+esc(who)+'</span>' +
+                  '<span class="tm">'+SHIFTS[sh].label+'</span>';
+  if(onClick) row.addEventListener("click", onClick);
+  return row;
+}
+function renderDayView(days){
+  var el = document.getElementById("dayview"); el.innerHTML = "";
+  days.forEach(function(d, i){
+    var card = document.createElement("div");
+    card.className = "daycard";
+    var hd = document.createElement("header");
+    hd.innerHTML = '<b>'+DOW_FULL[d.dow]+'</b><span class="dt">'+shortDate(d.date)+'</span>';
+    card.appendChild(hd);
+
+    DEPTS.forEach(function(dep){
+      dep.shifts.forEach(function(sh){
+        var need = coverNeed(dep.id, d.dow, sh);
+        var on = roster.staff.filter(function(s){ return s.active && s.dept===dep.id && worksShift(assignOf(s.id)[i], sh); });
+        if(!need && !on.length) return;
+
+        on.forEach(function(s){
+          /* Someone on a double shows up under both shifts, flagged on each. */
+          var dbl = isDouble(assignOf(s.id)[i]);
+          card.appendChild(slotRow(sh, s.name + (dbl ? " \u00b7 double" : ""), false, readOnly ? null : function(ev){
+            if(armedShift !== null && shiftFitsDept(armedShift, s.dept)){
+              pushHistory();
+              var a = assignOf(s.id);
+              a[i] = (ev.shiftKey && armedShift !== "off") ? addShift(a[i], armedShift) : armedShift;
+              saveWeek(); render();
+              markSaved(s.name + (armedShift === "off" ? " set to off" : " \u2192 " + chipLabel(a[i])));
+              return;
+            }
+            openPop(ev.currentTarget, s, i, d.dow);
+          }));
+        });
+        for(var k = on.length; k < need; k++){
+          card.appendChild(slotRow(sh, "Nobody scheduled \u2014 tap to fill", true, readOnly ? null : function(ev){
+            openFillPop(ev.currentTarget, dep, sh, i, d.dow);
+          }));
+        }
+      });
+    });
+    el.appendChild(card);
+  });
+}
+
+function renderIssues(list){
+  var wrapEl = document.getElementById("issueList");
+  var cnt = document.getElementById("issueCount");
+  wrapEl.innerHTML = "";
+  if(!list.length){
+    cnt.textContent = "All clear";
+    cnt.className = "count";
+    wrapEl.innerHTML = '<p class="clean">Every shift is covered, nobody is over their cap, and every turnaround clears 8 hours.</p>';
+    return;
+  }
+  var crit = list.filter(function(x){ return x.sev === "crit"; }).length;
+  cnt.textContent = list.length + (list.length===1 ? " item" : " items");
+  cnt.className = "count" + (crit ? " has" : "");
+  var ul = document.createElement("ul");
+  list.forEach(function(x){
+    var li = document.createElement("li");
+    li.innerHTML = '<span class="sev '+x.sev+'">'+(x.sev==="crit"?"Gap":"Check")+'</span><span>'+esc(x.text)+' <span class="when">\u00b7 '+esc(x.when)+'</span></span>';
+    ul.appendChild(li);
+  });
+  wrapEl.appendChild(ul);
+}
+
+function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+
+/* ========== dragging: one engine for mouse, trackpad and touch ==========
+   Native HTML5 drag never fires on touch, so this uses pointer events. */
+function findStaff(id){
+  for(var i=0;i<roster.staff.length;i++){ if(roster.staff[i].id === id) return roster.staff[i]; }
+  return {name:"Someone", id:id};
+}
+function cellInfo(el){
+  return {sid:el.getAttribute("data-sid"), day:parseInt(el.getAttribute("data-day"),10), dept:el.getAttribute("data-dept")};
+}
+function cellEl(sid, day){ return document.querySelector('#boardBody .cell[data-sid="'+sid+'"][data-day="'+day+'"]'); }
+function clearDragMarks(){
+  Array.prototype.forEach.call(document.querySelectorAll(".cell.droptarget, .cell.dragging, .cell.nodrop"), function(el){
+    el.classList.remove("droptarget"); el.classList.remove("dragging"); el.classList.remove("nodrop");
+  });
+}
+
+var drag = null, suppressClick = false, armedShift = null, renderQueued = false;
+
+/* A ghost is a floating element parented to <body>. If anything rebuilt the board
+   mid-drag the old code lost its listeners and stranded the ghost on the page. */
+function killGhosts(){
+  Array.prototype.forEach.call(document.querySelectorAll(".ghost"), function(g){
+    if(g.parentNode) g.parentNode.removeChild(g);
+  });
+}
+
+/* can this shift land on this person? */
+function shiftFitsDept(sh, deptId){
+  if(sh === "off") return true;
+  var d = DEPT_BY[deptId];
+  return !!(d && d.shifts.indexOf(sh) !== -1);
+}
+function chipLabel(v){
+  var l = shList(v);
+  if(!l.length) return "Off";
+  return l.map(function(sh){ return shiftName(sh) + " " + SHIFTS[sh].label; }).join(" + ");
+}
+
+/* Listeners live on window, never on the dragged element: the board re-renders
+   (a save landing, another manager's edit) and would otherwise tear the element
+   out from under the drag, leaving a ghost stuck on the page forever. */
+function startDrag(e, payload, el){
+  if(readOnly) return;
+  if(e.pointerType === "mouse" && e.button !== 0) return;
+  if(drag) teardownDrag();
+  closePop();
+  killGhosts();
+  drag = {
+    kind: payload.kind, shift: payload.shift, sid: payload.sid, day: payload.day, dept: payload.dept,
+    x: e.clientX, y: e.clientY, x0: e.clientX, y0: e.clientY, live: false, ghost: null, over: null
+  };
+  window.addEventListener("pointermove", dragMove, {passive:false});
+  window.addEventListener("pointerup", dragUp);
+  window.addEventListener("pointercancel", dragCancel);
+  window.addEventListener("blur", dragCancel);
+}
+function dragMove(e){
+  if(!drag) return;
+  drag.x = e.clientX; drag.y = e.clientY;
+  if(!drag.live){
+    if(Math.abs(drag.x - drag.x0) + Math.abs(drag.y - drag.y0) < 6) return;
+    drag.live = true;
+    document.body.classList.add("isdragging");
+    killGhosts();
+    var g = document.createElement("div");
+    /* A double drags as one thing; it takes its colour from the first shift. */
+    var lead = shList(drag.shift)[0] || "off";
+    g.className = "ghost " + (lead === "off" ? "OFF" : lead);
+    g.style.background = lead === "off" ? "var(--surface-2)" : ("var(--" + lead.toLowerCase() + "-bg)");
+    g.style.color = lead === "off" ? "var(--ink-2)" : ("var(--" + lead.toLowerCase() + "-fg)");
+    g.textContent = chipLabel(drag.shift);
+    document.body.appendChild(g);
+    drag.ghost = g;
+    if(drag.kind === "cell"){ var s = cellEl(drag.sid, drag.day); if(s) s.classList.add("dragging"); }
+  }
+  e.preventDefault();
+  drag.ghost.style.left = drag.x + "px";
+  drag.ghost.style.top = (drag.y - 22) + "px";
+
+  var under = document.elementFromPoint(drag.x, drag.y);
+  var cell = under && under.closest ? under.closest("#boardBody .cell") : null;
+  if(cell !== drag.over){
+    if(drag.over){ drag.over.classList.remove("droptarget"); drag.over.classList.remove("nodrop"); }
+    drag.over = cell;
+    if(cell){
+      var t = cellInfo(cell);
+      cell.classList.add(dropAllowed(t) ? "droptarget" : "nodrop");
+    }
+  }
+}
+function dropAllowed(t){
+  if(!drag) return false;
+  if(drag.kind === "palette") return shiftFitsDept(drag.shift, t.dept);
+  if(t.sid === drag.sid && t.day === drag.day) return false;
+  return t.dept === drag.dept;                       // no moving a night audit shift into the kitchen
+}
+function teardownDrag(){
+  window.removeEventListener("pointermove", dragMove, {passive:false});
+  window.removeEventListener("pointerup", dragUp);
+  window.removeEventListener("pointercancel", dragCancel);
+  window.removeEventListener("blur", dragCancel);
+  killGhosts();
+  document.body.classList.remove("isdragging");
+  clearDragMarks();
+  drag = null;
+  /* Deferred a tick: repainting synchronously on pointerup destroys the button
+     the pointer went down on, and the browser then never fires its click. */
+  if(renderQueued){ renderQueued = false; setTimeout(render, 0); }
+}
+function dragCancel(){ teardownDrag(); }
+function dragUp(e){
+  if(!drag) return;
+  if(!drag.live){ teardownDrag(); return; }        // never moved \u2014 let the click through
+  var under = document.elementFromPoint(e.clientX, e.clientY);
+  var cell = under && under.closest ? under.closest("#boardBody .cell") : null;
+  var d = drag;
+  suppressClick = true;
+  setTimeout(function(){ suppressClick = false; }, 60);
+
+  if(!cell){ teardownDrag(); return; }
+  var t = cellInfo(cell);
+  if(!dropAllowed(t)){
+    var why = (d.kind === "palette")
+      ? (chipLabel(d.shift) + " isn't a " + (DEPT_BY[t.dept] ? DEPT_BY[t.dept].name : "that department") + " shift")
+      : "You can only move a shift within the same department";
+    teardownDrag(); markSaved(why); return;
+  }
+
+  pushHistory();
+  if(d.kind === "palette"){
+    assignOf(t.sid)[t.day] = d.shift;
+    teardownDrag(); saveWeek(); render();
+    markSaved(findStaff(t.sid).name + (d.shift === "off" ? " set to off" : " \u2192 " + chipLabel(d.shift)));
+  } else {
+    var A = assignOf(d.sid), B = assignOf(t.sid);
+    var va = A[d.day] || "off", vb = B[t.day] || "off";
+    A[d.day] = vb; B[t.day] = va;
+    teardownDrag(); saveWeek(); render();
+    var an = findStaff(d.sid).name, bn = findStaff(t.sid).name;
+    markSaved(vb === "off"
+      ? (an === bn ? (an + "'s shift moved" ) : ("Moved " + an + "'s shift to " + bn))
+      : ("Swapped " + an + " and " + bn));
+  }
+}
+
+/* ========== the palette: drag a colour out, or arm it and click ========== */
+function renderPalette(){
+  var host = document.getElementById("palette");
+  if(!host) return;
+  Array.prototype.forEach.call(host.querySelectorAll(".palchip"), function(c){ c.parentNode.removeChild(c); });
+  var hint = document.getElementById("palHint");
+  var order = ["AM","PM","NOC","K","M","off"];
+  order.forEach(function(sh){
+    var chip = document.createElement("button");
+    chip.type = "button";
+    chip.className = "palchip " + (sh === "off" ? "OFF" : sh) + (armedShift === sh ? " armed" : "");
+    chip.setAttribute("data-shift", sh);
+    chip.setAttribute("aria-pressed", armedShift === sh ? "true" : "false");
+    chip.innerHTML = sh === "off"
+      ? "Off"
+      : shiftName(sh) + '<span class="t">' + SHIFTS[sh].label + "</span>";
+    chip.disabled = readOnly;
+    if(!readOnly){
+      chip.addEventListener("pointerdown", function(e){ startDrag(e, {kind:"palette", shift:sh}, chip); });
+      chip.addEventListener("click", function(){
+        if(suppressClick) return;
+        armedShift = (armedShift === sh) ? null : sh;
+        renderPalette();
+      });
+    }
+    host.insertBefore(chip, hint);
+  });
+  host.classList.toggle("hasArmed", armedShift !== null);
+  if(hint){
+    hint.textContent = readOnly
+      ? "View only \u2014 ask a manager to make changes"
+      : (armedShift !== null
+          ? ("Now click the days to set " + chipLabel(armedShift) + " \u2014 click the chip again to stop")
+          : "Drag one onto a day, or click it then click the days you want");
+  }
+}
+
+/* ========== keyboard ========== */
+function onCellKey(e){
+  var el = e.currentTarget, info = cellInfo(el), k = e.key;
+  if(k === "ArrowRight" || k === "ArrowLeft" || k === "ArrowUp" || k === "ArrowDown"){
+    e.preventDefault(); moveFocus(el, k, info); return;
+  }
+  if(readOnly) return;
+  var dep = DEPT_BY[info.dept];
+  var set = null;
+  /* Shift held: add as a second shift instead of replacing what's there. The
+     digits are the same either way, so !@# work as 1 2 3 on a US layout. */
+  var addMode = e.shiftKey;
+  var digit = /^[1-9]$/.test(k) ? parseInt(k,10) : ("!@#$%^&*(".indexOf(k) + 1);
+  if(k === "0" || k === "o" || k === "O" || k === "Backspace" || k === "Delete") set = "off";
+  else if(digit > 0 && dep && dep.shifts[digit-1]) set = dep.shifts[digit-1];
+  if(set === null) return;
+  e.preventDefault();
+  pushHistory();
+  var a = assignOf(info.sid);
+  a[info.day] = (addMode && set !== "off") ? addShift(a[info.day], set) : set;
+  saveWeek(); render(); refocus(info);
+}
+function refocus(info){ var el = cellEl(info.sid, info.day); if(el) el.focus(); }
+function moveFocus(el, key, info){
+  if(key === "ArrowRight" || key === "ArrowLeft"){
+    var d = info.day + (key === "ArrowRight" ? 1 : -1);
+    if(d < 0 || d > 6) return;
+    var n = cellEl(info.sid, d); if(n) n.focus();
+    return;
+  }
+  var rows = Array.prototype.slice.call(document.querySelectorAll("#boardBody tr")).filter(function(r){ return r.querySelector(".cell"); });
+  var rowIdx = -1;
+  rows.forEach(function(r, ri){ if(r.contains(el)) rowIdx = ri; });
+  var target = rows[rowIdx + (key === "ArrowDown" ? 1 : -1)];
+  if(!target) return;
+  var next = target.querySelectorAll(".cell")[info.day];
+  if(next) next.focus();
+}
+
+/* ========== cell popover ========== */
+var pop = document.getElementById("pop");
+function openPop(anchor, s, i, dow){
+  var arr = assignOf(s.id), cur = arr[i] || "off";
+  var list = shList(cur);
+  var dep = DEPT_BY[s.dept];
+  var opts = (dep ? dep.shifts : Object.keys(SHIFTS));
+  var html = '<div class="ph"><b>'+esc(s.name)+'</b>'+DOW_FULL[dow]+'</div>';
+  html += '<button class="opt'+(list.length===0?" sel":"")+'" data-set="off"><span class="sw" style="background:var(--surface-2)"></span>Off</button>';
+  opts.forEach(function(sh){
+    var ok = canWork(s, dow, sh);
+    var rest = restOk(arr, i, sh);
+    html += '<button class="opt'+(cur===sh?" sel":"")+(ok&&rest?"":" na")+'" data-set="'+sh+'">' +
+            '<span class="sw" style="background:var(--'+sh.toLowerCase()+'-bg);box-shadow:inset 0 0 0 1px var(--'+sh.toLowerCase()+'-edge)"></span>' +
+            shiftName(sh) + '<span class="tm">'+SHIFTS[sh].label+'</span></button>';
+  });
+
+  /* Doubles: one shift on the day, so offer the others as a second one. Two
+     already, so offer to take one back off. Either way it's a separate
+     section \u2014 clicking a shift above still just sets the day to that shift. */
+  if(list.length === 1){
+    var extras = opts.filter(function(sh){ return sh !== list[0]; });
+    if(extras.length){
+      html += '<div class="phs">Add a second shift</div>';
+      extras.forEach(function(sh){
+        var ok = canWork(s, dow, sh);
+        var rest = restOkAdded(arr, i, sh);
+        var why = !ok ? "not their shift" : (!rest ? "under 8h off" : "");
+        html += '<button class="opt'+(ok&&rest?"":" na")+'" data-add="'+sh+'">' +
+                '<span class="sw" style="background:var(--'+sh.toLowerCase()+'-bg);box-shadow:inset 0 0 0 1px var(--'+sh.toLowerCase()+'-edge)"></span>' +
+                '+ ' + shiftName(sh) + '<span class="tm">'+(why || SHIFTS[sh].label)+'</span></button>';
+      });
+    }
+  } else if(list.length > 1){
+    html += '<div class="phs">Working a double \u2014 drop one</div>';
+    list.forEach(function(sh){
+      html += '<button class="opt" data-drop="'+sh+'">' +
+              '<span class="sw" style="background:var(--'+sh.toLowerCase()+'-bg);box-shadow:inset 0 0 0 1px var(--'+sh.toLowerCase()+'-edge)"></span>' +
+              '\u2212 ' + shiftName(sh) + '<span class="tm">'+SHIFTS[sh].label+'</span></button>';
+    });
+  }
+
+  pop.innerHTML = html;
+  placePop(anchor);
+
+  Array.prototype.forEach.call(pop.querySelectorAll("[data-set]"), function(b){
+    b.addEventListener("click", function(){
+      pushHistory();
+      assignOf(s.id)[i] = b.getAttribute("data-set");
+      closePop(); saveWeek(); render();
+    });
+  });
+  Array.prototype.forEach.call(pop.querySelectorAll("[data-add]"), function(b){
+    b.addEventListener("click", function(){
+      var sh = b.getAttribute("data-add");
+      pushHistory();
+      var a = assignOf(s.id);
+      a[i] = addShift(a[i], sh);
+      closePop(); saveWeek(); render();
+      markSaved(s.name + " is on a double " + DOW[dow] + " \u2014 " + dayTimes(a[i]));
+    });
+  });
+  Array.prototype.forEach.call(pop.querySelectorAll("[data-drop]"), function(b){
+    b.addEventListener("click", function(){
+      var sh = b.getAttribute("data-drop");
+      pushHistory();
+      var a = assignOf(s.id);
+      a[i] = dropShift(a[i], sh);
+      closePop(); saveWeek(); render();
+      markSaved("Dropped " + shiftName(sh) + " \u2014 " + s.name + " is on " + (dayTimes(a[i]) || "off"));
+    });
+  });
+}
+function placePop(anchor){
+  var r = anchor.getBoundingClientRect();
+  pop.classList.add("open");
+  var pw = pop.offsetWidth, ph = pop.offsetHeight;
+  var left = Math.min(window.scrollX + r.left, window.scrollX + window.innerWidth - pw - 12);
+  var top = window.scrollY + r.bottom + 6;
+  if(r.bottom + ph + 12 > window.innerHeight) top = window.scrollY + r.top - ph - 6;
+  pop.style.left = Math.max(window.scrollX + 8, left) + "px";
+  pop.style.top = Math.max(window.scrollY + 8, top) + "px";
+}
+
+/* who can cover an empty slot \u2014 used from the phone day view */
+function openFillPop(anchor, dep, sh, i, dow){
+  var inDept = roster.staff.filter(function(s){ return s.active && s.dept === dep.id; });
+  var cands = inDept.filter(function(s){ return !shList(assignOf(s.id)[i]).length; });
+  /* Nobody free? The people already on that day can still take it as a double,
+     but they're a separate, clearly-labelled list \u2014 never mixed in with the
+     people who are simply off. */
+  var doubles = inDept.filter(function(s){
+    var d = assignOf(s.id)[i];
+    return shList(d).length === 1 && !worksShift(d, sh) && !isOffApproved(s.id, dayYmd(i));
+  });
+  cands.sort(function(a, b){
+    var oa = canWork(a, dow, sh) && restOk(assignOf(a.id), i, sh);
+    var ob = canWork(b, dow, sh) && restOk(assignOf(b.id), i, sh);
+    if(oa !== ob) return oa ? -1 : 1;
+    return daysWorked(assignOf(a.id)) - daysWorked(assignOf(b.id)) || a.name.localeCompare(b.name);
+  });
+  var html = '<div class="ph"><b>'+shiftName(sh)+' \u00b7 '+SHIFTS[sh].label+'</b>'+DOW_FULL[dow]+' \u2014 who covers it?</div>';
+  if(!cands.length){
+    html += '<div style="padding:8px 6px; font-size:13px; color:var(--ink-3)">Everyone in '+esc(dep.name)+' is already working that day.</div>';
+  }
+  cands.forEach(function(s){
+    var ok = canWork(s, dow, sh) && restOk(assignOf(s.id), i, sh);
+    var why = !canWork(s, dow, sh) ? "not their shift" : (!restOk(assignOf(s.id), i, sh) ? "too soon after" : "");
+    html += '<button class="opt'+(ok ? "" : " na")+'" data-fill="'+s.id+'">' +
+            '<span class="sw" style="background:var(--'+sh.toLowerCase()+'-bg);box-shadow:inset 0 0 0 1px var(--'+sh.toLowerCase()+'-edge)"></span>' +
+            esc(s.name) + '<span class="tm">'+(why || daysWorked(assignOf(s.id))+"d")+'</span></button>';
+  });
+  if(doubles.length){
+    html += '<div class="phs">Already on that day \u2014 as a double</div>';
+    doubles.forEach(function(s){
+      var arr = assignOf(s.id);
+      var ok = canWork(s, dow, sh) && restOkAdded(arr, i, sh);
+      var why = !canWork(s, dow, sh) ? "not their shift" : (!restOkAdded(arr, i, sh) ? "under 8h off" : dayTimes(arr[i]));
+      html += '<button class="opt'+(ok ? "" : " na")+'" data-dbl="'+s.id+'">' +
+              '<span class="sw" style="background:var(--'+sh.toLowerCase()+'-bg);box-shadow:inset 0 0 0 1px var(--'+sh.toLowerCase()+'-edge)"></span>' +
+              '+ ' + esc(s.name) + '<span class="tm">'+why+'</span></button>';
+    });
+  }
+  pop.innerHTML = html;
+  placePop(anchor);
+  Array.prototype.forEach.call(pop.querySelectorAll("[data-fill]"), function(b){
+    b.addEventListener("click", function(){
+      var id = b.getAttribute("data-fill");
+      pushHistory();
+      assignOf(id)[i] = sh;
+      closePop(); saveWeek(); render();
+      markSaved(findStaff(id).name + " added to " + DOW_FULL[dow] + " " + SHIFTS[sh].label);
+    });
+  });
+  Array.prototype.forEach.call(pop.querySelectorAll("[data-dbl]"), function(b){
+    b.addEventListener("click", function(){
+      var id = b.getAttribute("data-dbl");
+      pushHistory();
+      var a = assignOf(id);
+      a[i] = addShift(a[i], sh);
+      closePop(); saveWeek(); render();
+      markSaved(findStaff(id).name + " is on a double " + DOW[dow] + " \u2014 " + dayTimes(a[i]));
+    });
+  });
+}
+function closePop(){ pop.classList.remove("open"); }
+document.addEventListener("click", function(e){
+  if(!pop.contains(e.target) && !(e.target.closest && e.target.closest(".cell, button.slot"))) closePop();
+  var gm = document.getElementById("genMenu");
+  if(!gm.contains(e.target) && e.target.id !== "genBtn"){ gm.classList.remove("open"); document.getElementById("genBtn").setAttribute("aria-expanded","false"); }
+});
+document.addEventListener("keydown", function(e){
+  if(e.key === "Escape"){
+    closePop();
+    document.getElementById("genMenu").classList.remove("open");
+    if(drag) teardownDrag();
+    if(armedShift !== null){ armedShift = null; renderPalette(); }
+    closeDrawer(); closeTimeoff();
+  }
+});
+
+/* ========== drawer ========== */
+function openDrawer(){
+  renderDrawer();
+  document.getElementById("drawer").classList.add("open");
+  document.getElementById("scrim").classList.add("open");
+}
+function closeDrawer(){
+  document.getElementById("drawer").classList.remove("open");
+  document.getElementById("scrim").classList.remove("open");
+}
+var stSig = "";
+function staffSignature(){
+  return (readOnly ? "r|" : "w|") + JSON.stringify(roster.staff) + JSON.stringify(roster.coverage);
+}
+function renderDrawerIfChanged(){
+  var sig = staffSignature();
+  if(sig === stSig) return;
+  renderDrawer();
+}
+function renderDrawer(){
+  stSig = staffSignature();
+  var cov = document.getElementById("covTable");
+  var head = '<tr><th class="rh">Shift</th>';
+  for(var dw=0; dw<7; dw++){ var real=(WEEK_START_DOW+dw)%7; head += '<th>'+DOW[real]+'</th>'; }
+  head += '</tr>';
+  var rows = "";
+  DEPTS.forEach(function(d){
+    d.shifts.forEach(function(sh){
+      rows += '<tr><th class="rh">'+d.name+' <span class="mono" style="color:var(--ink-3);font-weight:400">'+SHIFTS[sh].label+'</span></th>';
+      for(var k=0;k<7;k++){
+        var real=(WEEK_START_DOW+k)%7;
+        rows += '<td><input type="number" min="0" max="6" value="'+coverNeed(d.id,real,sh)+'" data-cov="'+d.id+'|'+real+'|'+sh+'"'+(readOnly?" disabled":"")+'></td>';
+      }
+      rows += '</tr>';
+    });
+  });
+  cov.innerHTML = head + rows;
+  Array.prototype.forEach.call(cov.querySelectorAll("[data-cov]"), function(inp){
+    inp.addEventListener("change", function(){
+      var p = inp.getAttribute("data-cov").split("|");
+      var cov = thaw(roster.coverage) || {};
+      if(!cov[p[0]]) cov[p[0]] = {};
+      if(!cov[p[0]][p[1]]) cov[p[0]][p[1]] = {};
+      cov[p[0]][p[1]][p[2]] = Math.max(0, parseInt(inp.value,10) || 0);
+      roster.coverage = cov;
+      saveRoster(); render();
+    });
+  });
+
+  var host = document.getElementById("people"); host.innerHTML = "";
+  roster.staff.forEach(function(s, idx){
+    var el = document.createElement("div");
+    el.className = "person" + (s.active ? "" : " inactive");
+    var dep = DEPT_BY[s.dept] || DEPTS[0];
+
+    var r1 = '<div class="prow">' +
+      '<input class="nameIn" type="text" value="'+esc(s.name)+'" data-f="name" id="nm-'+s.id+'"'+(readOnly?" disabled":"")+'>' +
+      '<select data-f="dept" id="dp-'+s.id+'"'+(readOnly?" disabled":"")+'>' +
+        DEPTS.map(function(d){ return '<option value="'+d.id+'"'+(d.id===s.dept?" selected":"")+'>'+d.name+'</option>'; }).join("") +
+      '</select>' +
+      '<button class="tog'+(s.active?" on":"")+'" data-f="active">'+(s.active?"Active":"Inactive")+'</button>' +
+      '<span style="margin-left:auto;display:flex;align-items:center;gap:6px"><span class="lb" style="flex:none">Max days</span>' +
+      '<input type="number" min="0" max="7" value="'+(s.maxDays==null?5:s.maxDays)+'" data-f="maxDays" id="md-'+s.id+'"'+(readOnly?" disabled":"")+'></span>' +
+      (readOnly ? "" : '<button class="tog rm" data-f="remove" title="Take this person off the board for good">Remove</button>') +
+    '</div>';
+
+    var r2 = '<div class="prow"><span class="lb">Can work</span>' +
+      dep.shifts.map(function(sh){
+        return '<button class="tog'+((s.shifts||[]).indexOf(sh)!==-1?" on":"")+'" data-shift="'+sh+'">'+shiftName(sh)+' '+SHIFTS[sh].label+'</button>';
+      }).join("") + '</div>';
+
+    var r3 = '<div class="prow"><span class="lb">Never on</span>' +
+      [0,1,2,3,4,5,6].map(function(k){
+        var real = (WEEK_START_DOW+k)%7;
+        return '<button class="tog day'+((s.offDays||[]).indexOf(real)!==-1?" on":"")+'" data-off="'+real+'">'+DOW[real]+'</button>';
+      }).join("") + '</div>';
+
+    var r4 = '<div class="prow" style="align-items:flex-start"><span class="lb" style="padding-top:16px">Pattern</span>' +
+      '<div class="patgrid">' + [0,1,2,3,4,5,6].map(function(k){
+        var real = (WEEK_START_DOW+k)%7;
+        var v = (s.pattern||{})[real] || "";
+        var o = '<option value=""'+(v===""?" selected":"")+'>auto</option><option value="off"'+(v==="off"?" selected":"")+'>off</option>' +
+          dep.shifts.map(function(sh){ return '<option value="'+sh+'"'+(v===sh?" selected":"")+'>'+SHIFTS[sh].label+'</option>'; }).join("");
+        return '<div class="pc"><small>'+DOW[real]+'</small><select data-pat="'+real+'"'+(readOnly?" disabled":"")+'>'+o+'</select></div>';
+      }).join("") + '</div></div>';
+
+    el.innerHTML = r1 + r2 + r3 + r4;
+    host.appendChild(el);
+
+    if(readOnly) return;
+    /* Look the person up by id at event time. A snapshot replaces roster.staff
+       with a fresh (thawed) array, so an object captured when this row was
+       drawn is orphaned and mutating it saves nothing. */
+    var sid = s.id;
+    function live(){ 
+      for(var q=0;q<roster.staff.length;q++){ if(roster.staff[q].id === sid) return roster.staff[q]; }
+      return null;
+    }
+    el.querySelector('[data-f="name"]').addEventListener("change", function(e){
+      var t = live(); if(!t) return;
+      t.name = e.target.value.trim() || t.name; saveRoster(); render();
+    });
+    el.querySelector('[data-f="dept"]').addEventListener("change", function(e){
+      var t = live(); if(!t) return;
+      t.dept = e.target.value;
+      var d2 = DEPT_BY[t.dept];
+      t.shifts = (t.shifts||[]).filter(function(x){ return d2.shifts.indexOf(x)!==-1; });
+      if(!t.shifts.length) t.shifts = [d2.shifts[0]];
+      saveRoster(); renderDrawer(); render();
+    });
+    el.querySelector('[data-f="active"]').addEventListener("click", function(){
+      var t = live(); if(!t) return;
+      t.active = !t.active; saveRoster(); renderDrawer(); render();
+    });
+    el.querySelector('[data-f="maxDays"]').addEventListener("change", function(e){
+      var t = live(); if(!t) return;
+      t.maxDays = Math.max(0, Math.min(7, parseInt(e.target.value,10)||0)); saveRoster(); render();
+    });
+    /* Removing is permanent and there's no undo for it, so the button arms
+       itself first and disarms on its own if you walk away. */
+    var rmBtn = el.querySelector('[data-f="remove"]');
+    if(rmBtn){
+      var armTimer = null;
+      var disarm = function(){
+        if(armTimer){ clearTimeout(armTimer); armTimer = null; }
+        rmBtn.classList.remove("armed");
+        rmBtn.textContent = "Remove";
+      };
+      rmBtn.addEventListener("click", function(){
+        var t = live(); if(!t) return;
+        if(!armTimer){
+          rmBtn.classList.add("armed");
+          rmBtn.textContent = "Remove " + t.name + " for good?";
+          armTimer = setTimeout(disarm, 5000);
+          return;
+        }
+        disarm();
+        removePerson(sid);
+      });
+      rmBtn.addEventListener("blur", disarm);
+    }
+    Array.prototype.forEach.call(el.querySelectorAll("[data-shift]"), function(b){
+      b.addEventListener("click", function(){
+        var t = live(); if(!t) return;
+        var sh = b.getAttribute("data-shift");
+        t.shifts = (t.shifts || []).slice();
+        var at = t.shifts.indexOf(sh);
+        if(at === -1) t.shifts.push(sh); else t.shifts.splice(at,1);
+        saveRoster(); renderDrawer(); render();
+      });
+    });
+    Array.prototype.forEach.call(el.querySelectorAll("[data-off]"), function(b){
+      b.addEventListener("click", function(){
+        var t = live(); if(!t) return;
+        var dw2 = parseInt(b.getAttribute("data-off"),10);
+        t.offDays = (t.offDays || []).slice();
+        var at = t.offDays.indexOf(dw2);
+        if(at === -1) t.offDays.push(dw2); else t.offDays.splice(at,1);
+        saveRoster(); renderDrawer(); render();
+      });
+    });
+    Array.prototype.forEach.call(el.querySelectorAll("[data-pat]"), function(sel){
+      sel.addEventListener("change", function(){
+        var t = live(); if(!t) return;
+        var pat = {}; var src = t.pattern || {};
+        for(var q=0;q<7;q++) pat[q] = src[q] || "";
+        pat[sel.getAttribute("data-pat")] = sel.value;
+        t.pattern = pat;
+        saveRoster(); render();
+      });
+    });
+  });
+}
+
+/* ========== time-off drawer ========== */
+var calYear = 0, calMonth = 0, calInit = false;
+var MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+function openTimeoff(){
+  if(!calInit){
+    var d = parseISO(week.start);
+    calYear = d.getFullYear(); calMonth = d.getMonth();
+    calInit = true;
+  }
+  renderTimeoff();
+  document.getElementById("todrawer").classList.add("open");
+  document.getElementById("scrim").classList.add("open");
+}
+function closeTimeoff(){
+  document.getElementById("todrawer").classList.remove("open");
+  document.getElementById("scrim").classList.remove("open");
+}
+function newId(){ return "r" + Date.now().toString(36) + Math.floor(Math.random()*1e4).toString(36); }
+
+function guarded(label, fn){
+  try{ fn(); }
+  catch(err){
+    showBanner(label + " failed: " + (err && err.message ? err.message : err));
+  }
+}
+function addRequest(staffId, ymd, note, status){
+  if(!staffId || !ymd){ markSaved("Pick a person and a date first"); return; }
+  var existing = requestList().filter(function(r){ return r.staffId === staffId && r.date === ymd; })[0];
+  timeoff.requests = timeoff.requests || {};
+  if(existing){
+    timeoff.requests[existing.id].status = status;
+  } else {
+    timeoff.requests[newId()] = {staffId:staffId, date:ymd, note:note || "", status:status, createdAt:new Date().toISOString()};
+  }
+  saveTimeoff(); renderTimeoff(); render();
+  var nm = findStaff(staffId).name;
+  markSaved(nm + (status === "approved" ? " is off " : " requested off ") + shortDate(parseISO(ymd)));
+}
+function setStatus(id, status){
+  if(!timeoff.requests || !timeoff.requests[id]) return;
+  timeoff.requests[id].status = status;
+  timeoff.requests[id].decidedAt = new Date().toISOString();
+  saveTimeoff(); renderTimeoff(); render();
+}
+/* Take someone off the board for good: their roster row, their shifts this
+   week, and any time-off they had on the books. Weeks already saved keep
+   their row in the stored document, but nothing renders it \u2014 every view
+   walks roster.staff, so a person who isn't in the roster isn't anywhere. */
+function removePerson(id){
+  if(readOnly){ showBanner("You have view-only access to this board."); return; }
+  var nm = findStaff(id).name;
+
+  roster.staff = roster.staff.filter(function(x){ return x.id !== id; });
+
+  /* Rebuild rather than delete a key \u2014 these can be frozen snapshot objects. */
+  var hadShifts = false, a = {}, l = {};
+  Object.keys(week.assign || {}).forEach(function(k){
+    if(k === id) hadShifts = true; else a[k] = week.assign[k];
+  });
+  Object.keys(week.locks || {}).forEach(function(k){
+    if(k === id) hadShifts = true; else l[k] = week.locks[k];
+  });
+  week.assign = a; week.locks = l;
+
+  var reqs = timeoff.requests || {}, hadOff = false;
+  Object.keys(reqs).forEach(function(rid){
+    var r = reqs[rid];
+    if(r && r.staffId === id && !r.deleted){
+      reqs[rid] = {deleted:true, date: r.date || iso(new Date()), removedAt:new Date().toISOString()};
+      hadOff = true;
+    }
+  });
+
+  saveRoster();
+  if(hadShifts) saveWeek();
+  if(hadOff){ timeoff.requests = reqs; rebuildOffIndex(); saveTimeoff(); }
+  renderDrawer();
+  if(document.getElementById("todrawer").classList.contains("open")) renderTimeoff();
+  render();
+  markSaved("Removed " + nm + " from the board");
+}
+function removeRequest(id, staffHint, dateHint){
+  if(!id) return;
+  timeoff.requests = timeoff.requests || {};
+  var old = timeoff.requests[id] || {staffId:staffHint, date:dateHint};
+  var nm = findStaff(old.staffId).name;
+  /* Tombstone rather than unset \u2014 see rebuildOffIndex. Pruned for real later. */
+  timeoff.requests[id] = {deleted:true, date: old.date || iso(new Date()), removedAt:new Date().toISOString()};
+  saveTimeoff(); renderTimeoff(); render();
+  markSaved("Removed " + nm + "'s request");
+}
+
+var toSig = "";
+function timeoffSignature(){
+  return calYear + "-" + calMonth + "|" + (readOnly ? "r" : "w") + "|" +
+    requestList().map(function(r){ return r.id + ":" + r.status + ":" + r.date; }).join(",");
+}
+/* Only rebuild when what the drawer shows actually changed \u2014 a needless rebuild
+   between mousedown and mouseup eats the click on whatever you just pressed. */
+function renderTimeoffIfChanged(){
+  var sig = timeoffSignature();
+  if(sig === toSig) return;
+  renderTimeoff();
+}
+function renderTimeoff(){
+  toSig = timeoffSignature();
+  var badge = document.getElementById("toBadge");
+  if(badge){ var pc = pendingCount(); badge.textContent = pc ? String(pc) : ""; }
+
+  var who = document.getElementById("toWho");
+  if(who){
+    var keep = who.value;
+    who.innerHTML = '<option value="">Who\u2026</option>' + roster.staff.filter(function(s){ return s.active; })
+      .map(function(s){ return '<option value="'+s.id+'">'+esc(s.name)+'</option>'; }).join("");
+    if(keep) who.value = keep;
+    who.disabled = readOnly;
+  }
+  ["toDate","toNote","toAddApproved","toAddPending"].forEach(function(id){
+    var e = document.getElementById(id); if(e) e.disabled = readOnly;
+  });
+
+  /* calendar */
+  var host = document.getElementById("cal");
+  if(host){
+    host.innerHTML = "";
+    ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].forEach(function(n){
+      var h = document.createElement("div"); h.className = "dh"; h.textContent = n; host.appendChild(h);
+    });
+    var first = new Date(calYear, calMonth, 1);
+    var lead = first.getDay();
+    var dim = new Date(calYear, calMonth + 1, 0).getDate();
+    var cells = Math.ceil((lead + dim) / 7) * 7;
+    var start = addDays(first, -lead);
+    var todayYmd = iso(new Date());
+    var byDate = {};
+    requestList().forEach(function(r){
+      if(r.status === "denied") return;
+      (byDate[r.date] = byDate[r.date] || []).push(r);
+    });
+    for(var i = 0; i < cells; i++){
+      var d = addDays(start, i), ymd = iso(d), inMonth = d.getMonth() === calMonth;
+      var cell = document.createElement(readOnly ? "div" : "button");
+      cell.className = "day" + (inMonth ? "" : " out") + (ymd === todayYmd ? " today" : "");
+      if(!readOnly){ cell.type = "button"; cell.setAttribute("data-ymd", ymd); }
+      var n = document.createElement("div"); n.className = "n"; n.textContent = d.getDate();
+      cell.appendChild(n);
+      (byDate[ymd] || []).forEach(function(r){
+        var c = document.createElement("span");
+        c.className = "offchip" + (r.status === "pending" ? " pend" : "");
+        c.textContent = findStaff(r.staffId).name;
+        cell.appendChild(c);
+      });
+      host.appendChild(cell);
+    }
+    var lbl = document.getElementById("calMonth");
+    if(lbl) lbl.textContent = MONTHS[calMonth] + " " + calYear;
+  }
+
+  /* request list \u2014 upcoming first, pending at the very top */
+  var list = document.getElementById("reqList");
+  if(!list) return;
+  list.innerHTML = "";
+  var today = iso(new Date());
+  var all = requestList();
+  var rows = all.filter(function(r){ return r.status === "pending"; })
+    .concat(all.filter(function(r){ return r.status !== "pending" && r.date >= today; }))
+    .concat(all.filter(function(r){ return r.status !== "pending" && r.date < today; }).reverse().slice(0, 12));
+  if(!rows.length){
+    list.innerHTML = '<p class="clean" style="margin:0;padding:12px 13px;color:var(--ink-3);font-size:13.5px">Nothing logged yet. Add a request above, or click a day on the calendar.</p>';
+    return;
+  }
+  rows.forEach(function(r){
+    var row = document.createElement("div");
+    row.className = "reqrow";
+    var past = r.date < today;
+    row.innerHTML = '<span class="pill '+r.status+'">'+r.status+'</span>' +
+      '<span class="who">'+esc(findStaff(r.staffId).name)+'</span>' +
+      '<span class="dt">'+DOW[parseISO(r.date).getDay()]+' '+shortDate(parseISO(r.date))+'/'+parseISO(r.date).getFullYear()+(past ? " \u00b7 past" : "")+'</span>' +
+      (r.note ? '<span class="note">'+esc(r.note)+'</span>' : '');
+    if(!readOnly){
+      /* Rendered as plain markup and handled by one delegated listener on
+         #reqList. A listener on the button itself is lost whenever the list
+         rebuilds between mousedown and mouseup, and the click never fires. */
+      var acts = '<span class="acts">';
+      if(r.status !== "approved") acts += '<button type="button" class="mini go" data-act="approve" data-id="'+r.id+'">Approve</button>';
+      if(r.status !== "denied")   acts += '<button type="button" class="mini" data-act="deny" data-id="'+r.id+'">Deny</button>';
+      acts += '<button type="button" class="mini" data-act="remove" data-id="'+r.id+'"' +
+              ' data-staff="'+esc(r.staffId)+'" data-date="'+esc(r.date)+'">Remove</button></span>';
+      row.insertAdjacentHTML("beforeend", acts);
+    }
+    list.appendChild(row);
+  });
+}
+
+/* ========== PDF ========== */
+var PDF_FILL = {
+  AM:[216,236,221], PM:[214,229,244], NOC:[245,223,206], K:[224,228,231], M:[246,232,194],
+  timeoff:[236,229,243], off:[255,255,255], band:[226,232,234], head:[226,232,234]
+};
+var PDF_TEXT = {
+  AM:[29,89,54], PM:[27,77,122], NOC:[134,76,28], K:[70,80,87], M:[117,87,16],
+  timeoff:[91,74,124], off:[130,140,145]
+};
+function pdfCell(sh, offSt){
+  var list = shList(sh);
+  if(list.length > 1){
+    /* A double prints as both shifts stacked in the cell, tinted by the first
+       and marked so nobody reads it as a single shift. */
+    return {fill:PDF_FILL[list[0]], text:PDF_TEXT[list[0]], bold:true,
+      label:"DOUBLE\n" + list.map(function(x){ return SHIFTS[x].label; }).join("\n")};
+  }
+  if(list.length === 1){
+    sh = list[0];
+    /* Scheduled on a day that was already approved off \u2014 call it out on the
+       printed sheet, not just in the footnote. */
+    if(offSt === "approved") return {fill:[247,220,216], text:[150,40,30], bold:true,
+      label:"! " + shiftName(sh) + "\n" + SHIFTS[sh].label};
+    return {fill:PDF_FILL[sh], text:PDF_TEXT[sh], label:shiftName(sh) + "\n" + SHIFTS[sh].label};
+  }
+  if(offSt === "approved") return {fill:PDF_FILL.timeoff, text:PDF_TEXT.timeoff, label:"TIME OFF"};
+  return {fill:PDF_FILL.off, text:PDF_TEXT.off, label:"off"};
+}
+function buildPdf(){
+  var J = window.jspdf && window.jspdf.jsPDF;
+  if(!J) return null;
+  var doc = new J({orientation:"landscape", unit:"pt", format:"letter"});
+  if(typeof doc.autoTable !== "function") return null;
+
+  var start = parseISO(week.start), days = daysOf(start), end = addDays(start, 6);
+  var range = shortDate(start) + " \u2013 " + shortDate(end) + ", " + end.getFullYear();
+
+  doc.setFont("helvetica", "bold"); doc.setFontSize(16); doc.setTextColor(15, 26, 29);
+  doc.text("Front Desk Duty Board", 36, 46);
+  doc.setFont("helvetica", "normal"); doc.setFontSize(9); doc.setTextColor(90, 105, 110);
+  doc.text(roster.property || "", 36, 60);
+  doc.setFont("helvetica", "bold"); doc.setFontSize(11); doc.setTextColor(15, 26, 29);
+  doc.text(range, 756, 46, {align:"right"});
+  doc.setFont("helvetica", "normal"); doc.setFontSize(8); doc.setTextColor(90, 105, 110);
+  doc.text(DOW_FULL[WEEK_START_DOW] + "\u2013" + DOW_FULL[(WEEK_START_DOW + 6) % 7] + " week", 756, 60, {align:"right"});
+
+  var head = [["Name"].concat(days.map(function(d){ return DOW[d.dow] + "\n" + shortDate(d.date); })).concat(["Hours"])];
+  var body = [];
+  DEPTS.forEach(function(dep){
+    var people = roster.staff.filter(function(x){ return x.dept === dep.id && x.active; });
+    if(!people.length) return;
+    body.push([{content:dep.name.toUpperCase(), colSpan:9,
+      styles:{fillColor:PDF_FILL.band, textColor:[45,60,66], fontStyle:"bold", fontSize:7.5, halign:"left"}}]);
+    people.forEach(function(x){
+      var arr = assignOf(x.id);
+      var row = [{content:x.name, styles:{halign:"left", fontStyle:"bold"}}];
+      days.forEach(function(d, i){
+        var c = pdfCell(arr[i] || "off", offStatus(x.id, d.ymd));
+        row.push({content:c.label, styles:{fillColor:c.fill, textColor:c.text,
+          fontStyle: c.bold ? "bold" : "normal"}});
+      });
+      row.push({content:hoursOf(arr) + "h\n" + daysWorked(arr) + "d", styles:{fontStyle:"bold"}});
+      body.push(row);
+    });
+  });
+
+  doc.autoTable({
+    head:head, body:body, startY:76, theme:"grid",
+    styles:{font:"helvetica", fontSize:7.5, halign:"center", valign:"middle", cellPadding:4,
+            lineColor:[160,172,177], lineWidth:0.5, textColor:[20,30,35], minCellHeight:22},
+    headStyles:{fillColor:PDF_FILL.head, textColor:[20,30,35], fontStyle:"bold", fontSize:8},
+    columnStyles:{0:{halign:"left", cellWidth:104}, 8:{cellWidth:56}},
+    margin:{left:36, right:36}
+  });
+
+  var y = (doc.lastAutoTable ? doc.lastAutoTable.finalY : 400) + 18;
+  var offThisWeek = [];
+  days.forEach(function(d){
+    roster.staff.forEach(function(x){
+      if(x.active && isOffApproved(x.id, d.ymd)) offThisWeek.push(x.name + " " + DOW[d.dow] + " " + shortDate(d.date));
+    });
+  });
+  var gaps = audit().issues.filter(function(i2){ return i2.sev === "crit"; });
+
+  doc.setFontSize(8);
+  if(offThisWeek.length){
+    doc.setFont("helvetica", "bold"); doc.setTextColor(91, 74, 124);
+    doc.text("Approved time off:", 36, y);
+    doc.setFont("helvetica", "normal"); doc.setTextColor(60, 72, 78);
+    doc.text(doc.splitTextToSize(offThisWeek.join("   \u00b7   "), 640), 128, y);
+    y += 14 + (Math.ceil(offThisWeek.join("   \u00b7   ").length / 130) * 10);
+  }
+  if(gaps.length){
+    doc.setFont("helvetica", "bold"); doc.setTextColor(168, 58, 47);
+    doc.text("Needs attention:", 36, y);
+    doc.setFont("helvetica", "normal"); doc.setTextColor(60, 72, 78);
+    doc.text(doc.splitTextToSize(gaps.map(function(g){ return g.text + " (" + g.when + ")"; }).join("   \u00b7   "), 640), 128, y);
+    y += 14;
+  }
+  doc.setFont("helvetica", "normal"); doc.setFontSize(7); doc.setTextColor(130, 142, 148);
+  doc.text("Night shift is credited to the day it starts. Generated " +
+    new Date().toLocaleDateString() + ".", 36, 580);
+
+  return {blob:doc.output("blob"), name:"schedule-" + week.start + ".pdf"};
+}
+
+/* ========== toolbar wiring ========== */
+document.getElementById("genBtn").addEventListener("click", function(e){
+  e.stopPropagation();
+  var m = document.getElementById("genMenu");
+  var open = m.classList.toggle("open");
+  this.setAttribute("aria-expanded", open ? "true" : "false");
+});
+Array.prototype.forEach.call(document.querySelectorAll("#genMenu [data-mode]"), function(b){
+  b.addEventListener("click", function(){
+    document.getElementById("genMenu").classList.remove("open");
+    var mode = b.getAttribute("data-mode");
+    pushHistory();
+    var res = build(mode);
+    week.builtAt = new Date().toISOString();
+    saveWeek(); render();
+    if(res.gaps) markSaved(res.gaps + (res.gaps===1?" slot":" slots")+" still need a name");
+    else markSaved(res.filled ? ("Filled "+res.filled+(res.filled===1?" shift":" shifts")) : "Ready");
+  });
+});
+document.getElementById("prevWk").addEventListener("click", function(){ goto(addDays(parseISO(week.start), -7)); });
+document.getElementById("nextWk").addEventListener("click", function(){ goto(addDays(parseISO(week.start), 7)); });
+document.getElementById("thisWk").addEventListener("click", function(){ goto(weekStartFor(new Date())); });
+function goto(d){
+  var s = iso(weekStartFor(d));
+  history = [];
+  localRev = 0; savedRev = 0;
+  if(saveTimer){ clearTimeout(saveTimer); saveTimer = null; }
+  seedFromPatterns(s);
+  render();
+  loadWeek(s);
+}
+document.getElementById("copyBtn").addEventListener("click", function(){
+  var prev = iso(addDays(parseISO(week.start), -7));
+  if(!db){ markSaved("Last week isn't stored yet"); return; }
+  db.doc("weeks/"+prev).get().then(function(snap){
+    if(!snap.exists){ markSaved("Nothing saved for "+shortDate(parseISO(prev))); return; }
+    var prevWeek = normalizeWeek(snap.data(), week.start);
+    pushHistory();
+    week.assign = prevWeek.assign; week.locks = {};
+    saveWeek(); render(); markSaved("Copied from week of "+shortDate(parseISO(prev)));
+  })["catch"](function(){ markSaved("Couldn't read last week"); });
+});
+document.getElementById("undoBtn").addEventListener("click", undo);
+document.getElementById("staffBtn").addEventListener("click", openDrawer);
+document.getElementById("timeoffBtn").addEventListener("click", openTimeoff);
+document.getElementById("closeTo").addEventListener("click", closeTimeoff);
+/* Tap handling that survives the list being rebuilt mid-press.
+   A `click` listener is not enough: if the node you pressed is replaced before
+   you let go, the browser dispatches click on the container instead, and a
+   delegated `e.target.closest(...)` finds nothing. So resolve the target from
+   the pointer's position at release, and require little movement so that
+   dragging the drawer to scroll never fires an action. */
+function onTap(container, selector, handler){
+  if(!container) return;
+  var sx = 0, sy = 0, down = false;
+  container.addEventListener("pointerdown", function(e){
+    down = true; sx = e.clientX; sy = e.clientY;
+  });
+  container.addEventListener("pointerup", function(e){
+    if(!down) return;
+    down = false;
+    if(Math.abs(e.clientX - sx) + Math.abs(e.clientY - sy) > 10) return;   // that was a scroll
+    var el = document.elementFromPoint(e.clientX, e.clientY);
+    var hit = el && el.closest ? el.closest(selector) : null;
+    if(!hit && e.target && e.target.closest) hit = e.target.closest(selector);
+    if(hit && container.contains(hit)) handler(hit);
+  });
+  container.addEventListener("pointercancel", function(){ down = false; });
+}
+
+onTap(document.getElementById("reqList"), "[data-act]", function(b){
+  if(readOnly) return;
+  var id = b.getAttribute("data-id"), act = b.getAttribute("data-act");
+  if(act === "approve") guarded("Approving", function(){ setStatus(id, "approved"); });
+  else if(act === "deny") guarded("Denying", function(){ setStatus(id, "denied"); });
+  else if(act === "remove") guarded("Removing", function(){
+    removeRequest(id, b.getAttribute("data-staff"), b.getAttribute("data-date"));
+  });
+});
+onTap(document.getElementById("cal"), "[data-ymd]", function(d){
+  if(readOnly) return;
+  var el = document.getElementById("toDate");
+  if(el) el.value = d.getAttribute("data-ymd");
+  var w = document.getElementById("toWho");
+  if(w && !w.value) w.focus();
+});
+document.getElementById("calPrev").addEventListener("click", function(){
+  calMonth--; if(calMonth < 0){ calMonth = 11; calYear--; } renderTimeoff();
+});
+document.getElementById("calNext").addEventListener("click", function(){
+  calMonth++; if(calMonth > 11){ calMonth = 0; calYear++; } renderTimeoff();
+});
+function submitRequest(status){
+  guarded("Saving the request", function(){
+    addRequest(document.getElementById("toWho").value, document.getElementById("toDate").value,
+               document.getElementById("toNote").value, status);
+    document.getElementById("toNote").value = "";
+  });
+}
+document.getElementById("toAddApproved").addEventListener("click", function(){ submitRequest("approved"); });
+document.getElementById("toAddPending").addEventListener("click", function(){ submitRequest("pending"); });
+document.getElementById("closeDrawer").addEventListener("click", closeDrawer);
+document.getElementById("scrim").addEventListener("click", function(){ closeDrawer(); closeTimeoff(); });
+document.getElementById("printBtn").addEventListener("click", function(){ window.print(); });
+document.getElementById("pdfBtn").addEventListener("click", function(){
+  var out;
+  try{ out = buildPdf(); }
+  catch(err){ showBanner("Couldn't build the PDF: " + (err && err.message ? err.message : err)); return; }
+  if(!out){
+    showBanner("The PDF builder didn't load. Use Print and choose \u201cSave as PDF\u201d instead.");
+    return;
+  }
+  if(!downloads){
+    showBanner("Downloads aren't available in this view. Use Print and choose \u201cSave as PDF\u201d instead.");
+    return;
+  }
+  markSaved("Preparing PDF\u2026");
+  downloads.save({filename:out.name, data:out.blob}).then(function(){
+    markSaved("PDF saved");
+  })["catch"](function(e){
+    if(e && e.code === "declined") markSaved("PDF download cancelled");
+    else showBanner("The PDF didn't download: " + ((e && e.message) || "unknown error"));
+  });
+});
+document.getElementById("addPerson").addEventListener("click", function(){
+  if(readOnly) return;
+  var id = "p" + Date.now().toString(36);
+  roster.staff = roster.staff.slice();
+  roster.staff.push({id:id, name:"New hire", dept:"front", shifts:["AM"], offDays:[], maxDays:5, active:true, pattern:{}});
+  saveRoster(); renderDrawer(); render();
+});
+
+document.getElementById("exportBtn").addEventListener("click", function(){
+  var days = daysOf(parseISO(week.start));
+  var lines = [];
+  lines.push(["Name","Department"].concat(days.map(function(d){ return DOW[d.dow]+" "+shortDate(d.date); })).concat(["Days","Hours"]).join(","));
+  roster.staff.forEach(function(s){
+    if(!s.active) return;
+    var arr = assignOf(s.id);
+    lines.push([s.name, (DEPT_BY[s.dept]||{}).name || s.dept]
+      .concat(arr.map(function(x, di){
+        if(shList(x).length) return dayFull(x);          // "6:00am \u2013 2:00pm + 10:00pm \u2013 6:00am"
+        return isOffApproved(s.id, days[di].ymd) ? "approved time off" : "off";
+      }))
+      .concat([daysWorked(arr), hoursOf(arr)])
+      .map(function(v){ return '"'+String(v).replace(/"/g,'""')+'"'; }).join(","));
+  });
+  var csv = lines.join("\n");
+  var name = "hours-week-of-"+week.start+".csv";
+  if(downloads){
+    downloads.save({filename:name, data:csv}).then(function(){ markSaved("Exported "+name); })
+      ["catch"](function(){ markSaved("Export cancelled"); });
+  } else {
+    markSaved("Export isn't available in this view");
+  }
+});
+
+/* ========== boot ========== */
+/* A host that knows the viewer's role up front (the standalone site does)
+   can set read-only before anyone tries an edit. Unused inside Claude. */
+window.__setBoardReadOnly = function(v){
+  readOnly = !!v;
+  if(readOnly) showBanner("You have view-only access to this board.");
+  render();
+};
+seedFromPatterns(iso(weekStart));
+render();
+
+if(window.claude && window.claude.use){
+  window.claude.use("downloads").then(function(d){ downloads = d; })["catch"](function(){});
+  window.claude.use("db").then(function(x){
+    if(!x){ markSaved("Working locally \u2014 changes won't be shared"); return; }
+    db = x;
+    unsubRoster = db.doc("config/roster").onSnapshot(function(snap){
+      if(rosterRev !== rosterSaved) return;   // our roster edit is still in flight
+      if(snap.exists){
+        var d = snap.data();
+        roster = {
+          property: d.property || roster.property,
+          staff: (d.staff && d.staff.length) ? thaw(d.staff) : roster.staff,
+          coverage: d.coverage ? thaw(d.coverage) : roster.coverage
+        };
+      } else if(!snap.metadata.fromCache){
+        saveRoster();
+      }
+      render();
+      if(document.getElementById("drawer").classList.contains("open")) renderDrawerIfChanged();
+    }, function(){});
+    db.doc("config/timeoff").onSnapshot(function(snap){
+      if(toRev !== toSaved) return;             // our edit is still in flight
+      if(snap.exists){
+        var d = snap.data();
+        var req = (d && typeof d.requests === "object" && d.requests) ? thaw(d.requests) : null;
+        timeoff = {requests: req || {}};
+      } else {
+        timeoff = {requests:{}};
+      }
+      rebuildOffIndex();
+      if(pruneOldRequests()){ rebuildOffIndex(); saveTimeoff(); }
+      render();
+    }, function(){});
+    loadWeek(week.start);
+    markSaved("Live");
+  })["catch"](function(){});
+} else {
+  markSaved("Working locally \u2014 changes won't be shared");
+}
+})();
+</script>
